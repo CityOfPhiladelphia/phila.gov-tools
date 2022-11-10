@@ -25,4 +25,4 @@ jobs:
             AWS_REGION: us-east-1
             AWS_S3_BUCKET: tools-app-dev
         run:
-          aws s3 cp dist s3://$AWS_S3_BUCKET --region us-east-1 --delete
+          aws s3 cp dist s3://$AWS_S3_BUCKET --region us-east-1 --recursive
