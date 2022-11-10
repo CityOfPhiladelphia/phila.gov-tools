@@ -1,26 +1,29 @@
-name: Deploy to production
+name: Deploy to dev
 on:
   push:
     branches:
-      - master
+      - main
 jobs:
   build:
     name: Build files
     runs-on: ubuntu-latest
-    steps: 
+    steps:
       - name: Setup node
         uses: actions/setup-node@v1
-        with: 
+        with:
             node-version: '10.x'
       - uses: actions/checkout@master
       - name: Build project files
         run: |
           npm install
           npm run build
+
       - name: Deploy to s3
-        env: 
+        env:
             AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
             AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
             AWS_REGION: us-east-1
-        run: 
-          aws s3 cp dist s3://philagov-vue-apps/programs --recursive # change it
+            AWS_S3_BUCKET: tools-app-dev
+        run:
+          aws s3 sync dist s3://$AWS_S3_BUCKET --region us-east-1 --delete
+          aws s3 cp s3://$AWS_S3_BUCKET s3://$AWS_S3_BUCKET --recursive # change it

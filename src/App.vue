@@ -28,7 +28,7 @@
         <div
           class="accordion"
         >
-          <div
+          <!-- <div
             class="accordion-item"
             :class="{'is-active' : showAudiences}"
             @click="toggleAudiences"
@@ -64,32 +64,33 @@
                 class="program-audience"
               >{{ value.name }}</label>
             </div>
-          </div>
+          </div> -->
+
           <div
             class="accordion-item"
-            :class="{'is-active' : showServices}"
+            :class="{'is-active' : showTopics}"
             @click="toggleServices"
           >
             <div
               tabindex="0"
               class="h4 accordion-title"
             >
-              Filter by category
+              Filter by topic
             </div>
           </div>
           <div
-            v-show="showServices"
+            v-show="showTopics"
             class="acc-content"
           >
             <fieldset>
               <div
-                v-for="(value, key) in serviceTypes"
+                v-for="(value, key) in topics"
                 :key="key"
                 class="accordion-checkbox"
               >
                 <input
                   :id="value.slug"
-                  v-model="checkedServiceTypes"
+                  v-model="checkedTopics"
                   type="checkbox"
                   class="hidden-checkbox"
                   :value="value.slug"
@@ -114,6 +115,7 @@
           </button>
         </div>
       </div>
+
       <div id="programs-display">
         <div
           v-show="loading"
@@ -121,12 +123,14 @@
         >
           <i class="fas fa-spinner fa-spin fa-3x" />
         </div>
+
         <div
           v-show="!loading && emptyResponse"
           class="h3 mtm center"
         >
           Sorry, there are no results.
         </div>
+
         <div
           v-show="failure"
           class="h3 mtm center"
@@ -148,7 +152,7 @@
           >
             <div
               v-for="program in paginated('filteredPrograms')"
-              :key="program.id"
+              :key="program.title"
               class="medium-12 cell mbl program-wrap"
             >
               <a
@@ -161,12 +165,14 @@
                   class="program-image"
                 ></div>
                 <div class="content-block">
-                  <h3 :class="{ 'external' : program.link.includes('http') }">{{ program.title }}</h3>
+                  <!-- <h3 :class="{ 'external' : program.link.includes('http') }">{{ program.title }}</h3> -->
+                  <h3>{{ program.title }}</h3>
                   <p>{{ program.short_description }}</p>
                 </div>
               </a>
             </div>
           </paginate>
+
           <div class="program-pages">
             <div
               v-show="!loading && !emptyResponse && !failure"
@@ -223,8 +229,9 @@ import VuePaginate from "vue-paginate";
 Vue.use(VueFuse);
 Vue.use(VuePaginate);
 
-const programsEndpoint = 'https://api.phila.gov/phila/program/archives';
+const programsEndpoint = 'https://api.airtable.com/v0/appPVX1yJCVtJhklp/tools?api_key=keyZ84hQSumaKJOhi';
 const audienceEndpoint = 'https://api.phila.gov/phila/audience';
+const topicsEndpoint = 'https://api.airtable.com/v0/appPVX1yJCVtJhklp/topics?api_key=keyZ84hQSumaKJOhi';
 const serviceTypeEndpoint = 'https://api.phila.gov/phila/service/types';
 const relatedServicesEndpoint =  'http://api.phila.gov/phila/program/related-services';
 
@@ -245,13 +252,17 @@ export default {
       routerQuery: {},
       paginate: [ 'filteredPrograms' ],
       audiences: [],
+      topics: [],
       checkedAudiences: [],
+      checkedTopics: [],
       serviceTypes: [],
       checkedServiceTypes: [],
       relatedServices: [],
       page: 1,
       servicePrograms: [],
       audiencePrograms: [],
+      topicPrograms: [],
+      showTopics: true,
       showAudiences: true,
       showServices: true,
       showRelated : false,
@@ -310,6 +321,12 @@ export default {
       this.updateRouterQuery('checkedAudiences', val);
 
     },
+    checkedTopics(val) {
+      console.log('watch checkedTopics is firing, val:', val, 'and will call filterResults and updateRouterQuery');
+      this.filterResults();
+      this.updateRouterQuery('checkedTopics', val);
+
+    },
     checkedServiceTypes (val) {
       console.log('watch checkedServiceTypes is firing, val:', val, 'and will call filterResults and updateRouterQuery');
       this.filterResults();
@@ -329,6 +346,7 @@ export default {
   mounted: function() {
     this.getAllPrograms();
     this.getAllAudiences();
+    this.getAllTopics();
     this.getAllServices();
   },
 
@@ -341,14 +359,31 @@ export default {
             'count': -1,
           }})
         .then(response => {
-          this.programs = response.data;
-          this.filteredPrograms = response.data;
+          for (let record of response.data.records) {
+            this.programs.push(record.fields);
+            this.filteredPrograms.push(record.fields);
+          }
         })
         .catch(e => {})
         .finally(() => {
 
           this.loading = false;
         });
+    },
+    getAllTopics: function () {
+      console.log('getAllTopics is running');
+      axios
+        .get( topicsEndpoint , {
+          params: {
+            'count': -1,
+          }})
+        .then(response => {
+          for (let record of response.data.records) {
+            this.topics.push(record.fields);
+          }
+        })
+        .catch(e => {})
+        .finally(() => {});
     },
 
     getAllServices: function () {
@@ -402,6 +437,7 @@ export default {
       console.log('filterResults is running');
       await this.filterByServiceType();
       await this.filterByAudience();
+      await this.filterByTopic();
       await this.filterBySearch();
       await this.checkEmpty();
     },
@@ -425,14 +461,35 @@ export default {
       }
     },
 
+    filterByTopic: function() {
+      console.log('filterByTopic is running');
+      if (this.checkedTopics.length !== 0 ){
+
+        this.topicPrograms = [];
+
+        this.servicePrograms.forEach((program) => {
+          console.log('in forEach servicePrograms, program.topic:', program.topic);
+          // program.topics.forEach((topic) => {
+          if (this.checkedTopics.includes(program.topic)) {
+            if (!this.topicPrograms.includes(program)) {
+              this.topicPrograms.push(program);
+            }
+          }
+          // });
+        });
+      } else {
+        this.topicPrograms = this.servicePrograms;
+      }
+    },
+
     filterBySearch: function() {
       console.log('filterBySearch is running');
       if (this.search) {
-        this.$search(this.search, this.audiencePrograms, this.searchOptions).then(programs => {
+        this.$search(this.search, this.topicPrograms, this.searchOptions).then(programs => {
           this.filteredPrograms = programs;
         });
       } else {
-        this.filteredPrograms = this.audiencePrograms;
+        this.filteredPrograms = this.topicPrograms;
       }
 
     },
