@@ -1,15 +1,15 @@
 <template>
-  <div id="programs">
+  <div id="tools">
 
     <h1>Tools</h1>
 
     <h2>Featured Tools</h2>
 
-    <div id="programs-display">
+    <div id="tools-display">
       <div id="tiles">
-        <div class="medium-12 cell mbl program-wrap">
+        <div class="medium-12 cell mbl tool-wrap">
           <a
-            class="card program-card"
+            class="card tool-card"
           >
             test
           </a>
@@ -39,54 +39,16 @@
       </button>
     </div>
     <div
-      id="programs-container"
+      id="tools-container"
     >
       <div id="filters-container">
         <div
           class="accordion"
         >
-          <!-- <div
-            class="accordion-item"
-            :class="{'is-active' : showAudiences}"
-            @click="toggleAudiences"
-          >
-            <div
-              tabindex="0"
-              class="h4 accordion-title mbn"
-            >
-              Filter by audience
-            </div>
-          </div>
-          <div
-            v-show="showAudiences"
-            class="acc-content"
-          >
-            <div
-              v-for="(value, key) in audiences"
-              :key="key"
-              class="accordion-checkbox"
-            >
-              <input
-                :id="value.slug"
-                v-model="checkedAudiences"
-                type="checkbox"
-                :value="value.slug"
-                :name="value.slug"
-                class="hidden-checkbox"
-                @change="filterResults"
-              >
-              <label
-
-                :for="value.slug"
-                class="program-audience"
-              >{{ value.name }}</label>
-            </div>
-          </div> -->
-
           <div
             class="accordion-item"
             :class="{'is-active' : showTopics}"
-            @click="toggleServices"
+            @click="toggleTopics"
           >
             <div
               tabindex="0"
@@ -117,7 +79,7 @@
                 <label
                   :for="value.slug"
 
-                  class="program-category"
+                  class="tool-category"
                 ><span v-html="value.name" /></label>
               </div>
             </fieldset>
@@ -133,7 +95,7 @@
         </div>
       </div>
 
-      <div id="programs-display">
+      <div id="tools-display">
         <div
           v-show="loading"
           class="mtm center"
@@ -158,49 +120,49 @@
         <div id="tiles">
           <paginate
 
-            v-if="filteredPrograms.length > 0 "
-            id="program-results"
+            v-if="filteredTools.length > 0 "
+            id="tool-results"
             ref="paginator"
-            name="filteredPrograms"
-            :list="filteredPrograms"
+            name="filteredTools"
+            :list="filteredTools"
             class="grid-x grid-margin-x paginate-list"
             tag="div"
             :per="8"
           >
             <div
-              v-for="program in paginated('filteredPrograms')"
-              :key="program.title"
-              class="medium-12 cell mbl program-wrap"
+              v-for="tool in paginated('filteredTools')"
+              :key="tool.title"
+              class="medium-12 cell mbl tool-wrap"
             >
               <a
-                class="card program-card"
-                :href="program.link"
+                class="card tool-card"
+                :href="tool.link"
               >
                 <div class="trim"><img
-                  :src="program.image"
+                  :src="tool.image"
                   alt=""
-                  class="program-image"
+                  class="tool-image"
                 ></div>
                 <div class="content-block">
-                  <!-- <h3 :class="{ 'external' : program.link.includes('http') }">{{ program.title }}</h3> -->
-                  <h3>{{ program.title }}</h3>
-                  <p>{{ program.short_description }}</p>
+                  <!-- <h3 :class="{ 'external' : tool.link.includes('http') }">{{ tool.title }}</h3> -->
+                  <h3>{{ tool.title }}</h3>
+                  <p>{{ tool.short_description }}</p>
                 </div>
               </a>
             </div>
           </paginate>
 
-          <div class="program-pages">
+          <div class="tool-pages">
             <div
               v-show="!loading && !emptyResponse && !failure"
-              class="program-length"
+              class="tool-length"
             >
-              Showing <b> {{ filteredPrograms.length }} </b> programs.
+              Showing <b> {{ filteredTools.length }} </b> tools.
             </div>
 
             <paginate-links
               v-show="!loading && !emptyResponse && !failure"
-              for="filteredPrograms"
+              for="filteredTools"
               :async="true"
               :limit="3"
               :show-step-links="true"
@@ -212,7 +174,7 @@
               @change="onPageChange(); scrollToTop(); "
             />
           </div>
-          <div
+          <!-- <div
             v-show="showRelated && relatedServices.length > 0"
             id="related-services"
             class="grid-x grid-margin-x grid-padding-x"
@@ -230,7 +192,7 @@
                 </li>
               </ul>
             </div>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>
@@ -246,15 +208,14 @@ import VuePaginate from "vue-paginate";
 Vue.use(VueFuse);
 Vue.use(VuePaginate);
 
-const programsEndpoint = 'https://api.airtable.com/v0/appPVX1yJCVtJhklp/tools?api_key=keyZ84hQSumaKJOhi';
-const audienceEndpoint = 'https://api.phila.gov/phila/audience';
+const toolsEndpoint = 'https://api.airtable.com/v0/appPVX1yJCVtJhklp/tools?api_key=keyZ84hQSumaKJOhi';
 const topicsEndpoint = 'https://api.airtable.com/v0/appPVX1yJCVtJhklp/topics?api_key=keyZ84hQSumaKJOhi';
-const serviceTypeEndpoint = 'https://api.phila.gov/phila/service/types';
-const relatedServicesEndpoint =  'http://api.phila.gov/phila/program/related-services';
+// const serviceTypeEndpoint = 'https://api.phila.gov/phila/service/types';
+// const relatedServicesEndpoint =  'http://api.phila.gov/phila/program/related-services';
 
 
 export default {
-  name: "Programs",
+  name: "Tools",
   components: {
 
   },
@@ -263,26 +224,16 @@ export default {
   },
   data: function() {
     return {
-      programs: [],
-      filteredPrograms: [],
+      tools: [],
+      filteredTools: [],
       search: '',
       routerQuery: {},
-      paginate: [ 'filteredPrograms' ],
-      audiences: [],
+      paginate: [ 'filteredTools' ],
       topics: [],
-      checkedAudiences: [],
       checkedTopics: [],
-      serviceTypes: [],
-      checkedServiceTypes: [],
-      relatedServices: [],
       page: 1,
-      servicePrograms: [],
-      audiencePrograms: [],
-      topicPrograms: [],
+      topicTools: [],
       showTopics: true,
-      showAudiences: true,
-      showServices: true,
-      showRelated : false,
       loading: true,
       emptyResponse: false,
       failure: false,
@@ -322,34 +273,22 @@ export default {
 
     },
 
-    filteredPrograms(val) {
-      console.log('watch filteredPrograms is firing, val:', val);
-      if (val.length === 0) {
-        this.getRelatedServices();
-        this.showRelated = true;
-      } else {
-        this.showRelated = false;
-      }
+    filteredTools(val) {
+      console.log('watch filteredTools is firing, val:', val);
+      // if (val.length === 0) {
+      //   // this.getRelatedServices();
+      //   this.showRelated = true;
+      // } else {
+      //   this.showRelated = false;
+      // }
     },
 
-    checkedAudiences(val) {
-      console.log('watch checkedAudiences is firing, val:', val, 'and will call filterResults and updateRouterQuery');
-      this.filterResults();
-      this.updateRouterQuery('checkedAudiences', val);
-
-    },
     checkedTopics(val) {
       console.log('watch checkedTopics is firing, val:', val, 'and will call filterResults and updateRouterQuery');
       this.filterResults();
       this.updateRouterQuery('checkedTopics', val);
-
     },
-    checkedServiceTypes (val) {
-      console.log('watch checkedServiceTypes is firing, val:', val, 'and will call filterResults and updateRouterQuery');
-      this.filterResults();
-      this.updateRouterQuery('checkedServiceTypes', val);
 
-    },
     loading(val) {
       console.log('watch loading is firing');
       if(!val) {
@@ -361,24 +300,22 @@ export default {
   },
 
   mounted: function() {
-    this.getAllPrograms();
-    this.getAllAudiences();
+    this.getAllTools();
     this.getAllTopics();
-    this.getAllServices();
   },
 
   methods: {
-    getAllPrograms: function () {
-      console.log('getAllPrograms is running');
+    getAllTools: function () {
+      console.log('getAllTools is running');
       axios
-        .get( programsEndpoint , {
+        .get( toolsEndpoint , {
           params: {
             'count': -1,
           }})
         .then(response => {
           for (let record of response.data.records) {
-            this.programs.push(record.fields);
-            this.filteredPrograms.push(record.fields);
+            this.tools.push(record.fields);
+            this.filteredTools.push(record.fields);
           }
         })
         .catch(e => {})
@@ -403,142 +340,50 @@ export default {
         .finally(() => {});
     },
 
-    getAllServices: function () {
-      console.log('getAllServices is running');
-      axios
-        .get(serviceTypeEndpoint, {
-          params: {
-            'per_page': 30,
-          }})
-        .then(response => {
-          this.serviceTypes = response.data;
-        })
-        .catch(e => {})
-        .finally(() => {
-
-        });
-    },
-
-    getAllAudiences: function () {
-      console.log('getAllAudiences is running');
-      axios
-        .get( audienceEndpoint , {
-          params: {
-            'count': -1,
-          }})
-        .then(response => {
-          this.audiences = response.data;
-        })
-        .catch(e => {})
-        .finally(() => {});
-    },
-
-    getRelatedServices: function () {
-      console.log('getRelatedServices is running');
-
-      let params = {
-        count: '50',
-        'audience' : this.checkedAudiences,
-        'service_type': this.checkedServiceTypes,
-      };
-
-      axios.get( relatedServicesEndpoint, { params })
-        .then(response => {
-          this.relatedServices = response.data;
-        })
-        .catch(e => {
-        });
-    },
-
     filterResults: async function () {
       console.log('filterResults is running');
-      await this.filterByServiceType();
-      await this.filterByAudience();
       await this.filterByTopic();
       await this.filterBySearch();
       await this.checkEmpty();
-    },
-
-    filterByAudience: function() {
-      console.log('filterByAudience is running');
-      if (this.checkedAudiences.length !== 0 ){
-        this.audiencePrograms = [];
-
-        this.servicePrograms.forEach((program) => {
-          program.audiences.forEach((audience) => {
-            if (this.checkedAudiences.includes(audience.slug)) {
-              if (!this.audiencePrograms.includes(program)) {
-                this.audiencePrograms.push(program);
-              }
-            }
-          });
-        });
-      } else {
-        this.audiencePrograms = this.servicePrograms;
-      }
     },
 
     filterByTopic: function() {
       console.log('filterByTopic is running');
       if (this.checkedTopics.length !== 0 ){
 
-        this.topicPrograms = [];
+        this.topicTools = [];
 
-        this.servicePrograms.forEach((program) => {
-          console.log('in forEach servicePrograms, program.topic:', program.topic);
-          // program.topics.forEach((topic) => {
-          if (this.checkedTopics.includes(program.topic)) {
-            if (!this.topicPrograms.includes(program)) {
-              this.topicPrograms.push(program);
+        this.tools.forEach((tool) => {
+          console.log('in forEach tools, tool.topic:', tool.topic);
+          // tool.topics.forEach((topic) => {
+          if (this.checkedTopics.includes(tool.topic)) {
+            if (!this.topicTools.includes(tool)) {
+              this.topicTools.push(tool);
             }
           }
-          // });
         });
       } else {
-        this.topicPrograms = this.servicePrograms;
+        this.topicTools = this.tools;
       }
     },
 
     filterBySearch: function() {
-      console.log('filterBySearch is running');
+      console.log('filterBySearch is running, this.search:', this.search, 'this.topicTools:', this.topicTools);
       if (this.search) {
-        this.$search(this.search, this.topicPrograms, this.searchOptions).then(programs => {
-          this.filteredPrograms = programs;
+        console.log('filterBySearch, if this.search is running');
+        this.$search(this.search, this.topicTools, this.searchOptions).then(tools => {
+          this.filteredTools = tools;
         });
       } else {
-        this.filteredPrograms = this.topicPrograms;
+        console.log('filterBySearch, else is running');
+        this.filteredTools = this.topicTools;
       }
 
     },
 
-    filterByServiceType: function() {
-      console.log('filterByServiceType is running');
-      if (this.checkedServiceTypes.length !== 0 ){
-        this.servicePrograms = [];
-
-        this.programs.forEach((program) => {
-
-          program.services.forEach((serviceType) => {
-            if (this.checkedServiceTypes.includes(serviceType.slug)) {
-              if (!this.servicePrograms.includes(program)) {
-                this.servicePrograms.push(program);
-              }
-            }
-          });
-        });
-      } else {
-        this.servicePrograms = this.programs;
-      }
-    },
-
-    toggleAudiences: function() {
-      console.log('toggleAudiences is running');
-      this.showAudiences = this.showAudiences ? false : true;
-    },
-
-    toggleServices: function() {
-      console.log('toggleServices is running');
-      this.showServices = this.showServices ? false : true;
+    toggleTopics: function() {
+      console.log('toggleTopics is running');
+      this.showTopics = this.showTopics ? false : true;
     },
 
     updateRouterQuery: function (key, value) {
@@ -567,7 +412,7 @@ export default {
 
     checkEmpty: function() {
       console.log('checkEmpty is running');
-      this.emptyResponse = (this.filteredPrograms.length === 0 ) ? true : false;
+      this.emptyResponse = (this.filteredTools.length === 0 ) ? true : false;
     },
 
     resetRouterQuery: function () {
@@ -581,7 +426,7 @@ export default {
       console.log('initFilters is running');
       if (Object.keys(this.$route.query).length !== 0) {
         for (let routerKey in this.$route.query) {
-          if(routerKey === "checkedServiceTypes" || routerKey === "checkedAudiences"){
+          if(routerKey === "checkedTopics"){
             Vue.set(this, routerKey, this.returnArray(this.$route.query[routerKey]));
           } else {
             Vue.set(this, routerKey, this.$route.query[routerKey]);
@@ -589,8 +434,6 @@ export default {
         }
         this.setPage();
       }
-
-
     },
 
     returnArray (value) {
@@ -632,8 +475,7 @@ export default {
 
     clearAllFilters() {
       console.log('clearAllFilters is running');
-      this.checkedAudiences = [];
-      this.checkedServiceTypes = [];
+      this.checkedTopics = [];
       this.search = '';
       this.page = 1;
     },
@@ -643,7 +485,7 @@ export default {
 
 <style lang="scss">
 
-#programs {
+#tools {
   margin: 0 auto;
   max-width: 75rem;
   padding: 0px 10px 0px 10px;
@@ -662,7 +504,7 @@ export default {
 
     }
 
-  #programs-container {
+  #tools-container {
     display: flex;
 
     #filters-container {
@@ -701,10 +543,10 @@ export default {
       }
     }
 
-    #programs-display {
+    #tools-display {
       width: 66%;
 
-      .program-wrap {
+      .tool-wrap {
         min-height: 353px;
       }
 
@@ -715,7 +557,7 @@ export default {
     }
   }
 
-  .program-pages {
+  .tool-pages {
     display: flex;
     justify-content: space-between;
   }
@@ -727,7 +569,7 @@ export default {
         margin: 0 auto;
       }
 
-      #programs-container {
+      #tools-container {
         flex-direction: column;
 
         #filters-container {
@@ -736,7 +578,7 @@ export default {
           padding:0 0 1rem 0
         }
 
-        #programs-display {
+        #tools-display {
           width: 95%;
           margin: 0 auto;
         }
