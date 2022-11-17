@@ -1,19 +1,35 @@
 <template>
-  <div id="tools">
+  <div
+    id="tools"
+    class="phila-ui-skin"
+  >
 
-    <h1>Tools</h1>
+    <h1 class="page-title">Tools</h1>
 
     <h2>Featured Tools</h2>
 
-    <div id="tools-display">
-      <div id="tiles">
-        <div class="medium-12 cell mbl tool-wrap">
-          <a
-            class="card tool-card"
-          >
-            test
-          </a>
-        </div>
+    <div
+      id="tiles"
+      class="grid-x grid-margin-x"
+    >
+      <div
+        v-for="tool in featuredTools"
+        class="medium-12 cell mbl tool-wrap"
+      >
+        <a
+          class="card tool-card"
+          :href="tool.link"
+        >
+          <div class="content-block">
+            <!-- <h3 :class="{ 'external' : tool.link.includes('http') }">{{ tool.title }}</h3> -->
+            <i class="fa-regular fa-thumbtack"></i>
+            <span class="featured-label">FEATURED</span>
+            <h3>{{ tool.title }}</h3>
+            <p>{{ tool.meta_short_description }}</p>
+            <span class="view-label">View</span>
+            <i class="fa-solid fa-angle-right"></i>
+          </div>
+        </a>
       </div>
     </div>
 
@@ -38,6 +54,7 @@
         <i class="fas fa-times " />
       </button>
     </div>
+
     <div
       id="tools-container"
     >
@@ -138,15 +155,12 @@
                 class="card tool-card"
                 :href="tool.link"
               >
-                <div class="trim"><img
-                  :src="tool.image"
-                  alt=""
-                  class="tool-image"
-                ></div>
                 <div class="content-block">
                   <!-- <h3 :class="{ 'external' : tool.link.includes('http') }">{{ tool.title }}</h3> -->
                   <h3>{{ tool.title }}</h3>
-                  <p>{{ tool.short_description }}</p>
+                  <p>{{ tool.meta_short_description }}</p>
+                  <span class="view-label">View</span>
+                  <i class="fa-solid fa-angle-right"></i>
                 </div>
               </a>
             </div>
@@ -174,25 +188,6 @@
               @change="onPageChange(); scrollToTop(); "
             />
           </div>
-          <!-- <div
-            v-show="showRelated && relatedServices.length > 0"
-            id="related-services"
-            class="grid-x grid-margin-x grid-padding-x"
-          >
-            <div class="medium-24 cell">
-              <h3 class="black bg-ghost-gray phm-mu mtl mbm">
-                Related services
-              </h3>
-              <ul class="phm-mu">
-                <li
-                  v-for="relatedService in relatedServices"
-                  :key="relatedService.id"
-                >
-                  <a :href="relatedService.link">{{ relatedService.name }}</a>
-                </li>
-              </ul>
-            </div>
-          </div> -->
         </div>
       </div>
     </div>
@@ -210,9 +205,8 @@ Vue.use(VuePaginate);
 
 const toolsEndpoint = 'https://api.airtable.com/v0/appPVX1yJCVtJhklp/tools?api_key=keyZ84hQSumaKJOhi';
 const topicsEndpoint = 'https://api.airtable.com/v0/appPVX1yJCVtJhklp/topics?api_key=keyZ84hQSumaKJOhi';
-// const serviceTypeEndpoint = 'https://api.phila.gov/phila/service/types';
-// const relatedServicesEndpoint =  'http://api.phila.gov/phila/program/related-services';
 
+import { format } from 'date-fns';
 
 export default {
   name: "Tools",
@@ -226,6 +220,7 @@ export default {
     return {
       tools: [],
       filteredTools: [],
+      featuredTools: [],
       search: '',
       routerQuery: {},
       paginate: [ 'filteredTools' ],
@@ -273,15 +268,15 @@ export default {
 
     },
 
-    filteredTools(val) {
-      console.log('watch filteredTools is firing, val:', val);
-      // if (val.length === 0) {
-      //   // this.getRelatedServices();
-      //   this.showRelated = true;
-      // } else {
-      //   this.showRelated = false;
-      // }
-    },
+    // filteredTools(val) {
+    //   console.log('watch filteredTools is firing, val:', val);
+    //   // if (val.length === 0) {
+    //   //   // this.getRelatedServices();
+    //   //   this.showRelated = true;
+    //   // } else {
+    //   //   this.showRelated = false;
+    //   // }
+    // },
 
     checkedTopics(val) {
       console.log('watch checkedTopics is firing, val:', val, 'and will call filterResults and updateRouterQuery');
@@ -299,15 +294,49 @@ export default {
 
   },
 
-  mounted: function() {
-    this.getAllTools();
+  async mounted() {
     this.getAllTopics();
+    await this.getAllTools();
+    this.getFeaturedTools();
   },
 
   methods: {
-    getAllTools: function () {
-      console.log('getAllTools is running');
-      axios
+    getFeaturedTools() {
+      let currentDate = new Date();
+      let currentMonth = format(currentDate, 'MMMM');
+
+      // seasonal priority
+      for (let tool of this.tools) {
+        // console.log('in getFeaturedTools');
+        if (tool.priority_seasonal_value && tool.priority_seasonal_value.includes(currentMonth)) {
+          this.featuredTools.push(tool);
+        }
+      }
+
+      if (this.featuredTools.length > 3) {
+        return;
+      }
+
+      // new release priority
+      for (let tool of this.tools) {
+        if (tool.priority_new_release && tool.priority_new_release == 'Yes') {
+          this.featuredTools.push(tool);
+        }
+      }
+
+      // fixed priority
+      let fixedLength = 4-this.featuredTools.length;
+      // console.log('getFeaturedTools, fixedLength:', fixedLength, 'currentDate:', currentDate, 'currentMonth:', currentMonth);
+
+      for (let i=1; i<=fixedLength; i++) {
+        let iTool = this.tools.filter(tool => tool.priority_fixed_value == i)[0];
+        // console.log('getFeaturedTools fixed loop, i:', i, 'iTool:', iTool);
+        this.featuredTools.push(iTool);
+      }
+    },
+    async getAllTools() {
+      // console.log('getAllTools is running');
+      await axios
         .get( toolsEndpoint , {
           params: {
             'count': -1,
@@ -325,7 +354,7 @@ export default {
         });
     },
     getAllTopics: function () {
-      console.log('getAllTopics is running');
+      // console.log('getAllTopics is running');
       axios
         .get( topicsEndpoint , {
           params: {
@@ -339,7 +368,6 @@ export default {
         .catch(e => {})
         .finally(() => {});
     },
-
     filterResults: async function () {
       console.log('filterResults is running');
       await this.filterByTopic();
@@ -382,7 +410,6 @@ export default {
     },
 
     toggleTopics: function() {
-      console.log('toggleTopics is running');
       this.showTopics = this.showTopics ? false : true;
     },
 
@@ -485,24 +512,73 @@ export default {
 
 <style lang="scss">
 
+.phila-ui-skin {
+
+  .page-title {
+    border-bottom: 12px solid #2176d2;
+  }
+
+  .clear-button {
+    color: #ffffff;
+    background-color: #0F4D90;
+  }
+
+  a.card {
+
+    border-bottom: 5px solid #0F4D90;
+
+    h3 {
+      font-size: 24px;
+    }
+
+    .featured-label {
+      font-family: "Open Sans", sans-serif;
+      padding-left: 1rem;
+    }
+
+    .view-label {
+      padding-right: .5rem;
+    }
+
+  }
+
+  a.card:hover {
+    background-color: #0F4D90;
+    color: #ffffff;
+    opacity: 1;
+
+    h3 {
+      color: #ffffff;
+    }
+  }
+
+  .content-block {
+    height: 260px;
+  }
+
+  // .accordion-checkbox input[type=checkbox]:focus + label {
+  //   border: 0px none !important;
+  // }
+
+}
+
 #tools {
   margin: 0 auto;
   max-width: 75rem;
   padding: 0px 10px 0px 10px;
 
-   .clear-search-btn {
-      position: absolute;
-      top:16px;
-      right: 70px;
-      padding: 0;
-      font-size: 20px;
-      background-color: #fff;
-      opacity: 0.8;
-      z-index: 999;
-      cursor: pointer;
-      color: rgba(60, 60, 60, 0.5);
-
-    }
+ .clear-search-btn {
+    position: absolute;
+    top:16px;
+    right: 70px;
+    padding: 0;
+    font-size: 20px;
+    background-color: #fff;
+    opacity: 0.8;
+    z-index: 999;
+    cursor: pointer;
+    color: rgba(60, 60, 60, 0.5);
+  }
 
   #tools-container {
     display: flex;
@@ -512,7 +588,10 @@ export default {
       padding-right: 2rem;
 
       .accordion-title {
-        font-weight: bold;
+        // font-weight: bold;
+        margin: 0px;
+        padding-top: 1rem;
+        padding-bottom: 1rem;
       }
 
       .acc-content {
@@ -533,8 +612,6 @@ export default {
             z-index: -1;        // avoid unintended clicks
             position: absolute; // don't affect other elements positioning
           }
-
-
         }
       }
 
