@@ -17,7 +17,7 @@
         class="medium-12 cell mbl tool-wrap"
       >
         <a
-          class="card tool-card"
+          class="card featured-card"
           :href="tool.link"
         >
           <div class="content-block">
@@ -25,9 +25,12 @@
             <i class="fa-regular fa-thumbtack"></i>
             <span class="featured-label">FEATURED</span>
             <h3>{{ tool.title }}</h3>
-            <p>{{ tool.meta_short_description }}</p>
-            <span class="view-label">View</span>
-            <i class="fa-solid fa-angle-right"></i>
+            <!-- <p>{{ tool.meta_short_description }}</p> -->
+            <p>{{ tool.short_description }}</p>
+            <div class="content-footer">
+              <span class="view-label">View</span>
+              <i class="fa-solid fa-angle-right"></i>
+            </div>
           </div>
         </a>
       </div>
@@ -158,9 +161,12 @@
                 <div class="content-block">
                   <!-- <h3 :class="{ 'external' : tool.link.includes('http') }">{{ tool.title }}</h3> -->
                   <h3>{{ tool.title }}</h3>
-                  <p>{{ tool.meta_short_description }}</p>
-                  <span class="view-label">View</span>
-                  <i class="fa-solid fa-angle-right"></i>
+                  <!-- <p>{{ tool.meta_short_description }}</p> -->
+                  <p>{{ tool.short_description }}</p>
+                  <div class="content-footer">
+                    <span class="view-label">View</span>
+                    <i class="fa-solid fa-angle-right"></i>
+                  </div>
                 </div>
               </a>
             </div>
@@ -203,8 +209,8 @@ import VuePaginate from "vue-paginate";
 Vue.use(VueFuse);
 Vue.use(VuePaginate);
 
-const toolsEndpoint = 'https://api.airtable.com/v0/appPVX1yJCVtJhklp/tools?api_key=keyZ84hQSumaKJOhi';
-const topicsEndpoint = 'https://api.airtable.com/v0/appPVX1yJCVtJhklp/topics?api_key=keyZ84hQSumaKJOhi';
+const toolsEndpoint = 'https://api.airtable.com/v0/appPVX1yJCVtJhklp/tools2?api_key=keyZ84hQSumaKJOhi';
+const topicsEndpoint = 'https://api.airtable.com/v0/appPVX1yJCVtJhklp/topics2?api_key=keyZ84hQSumaKJOhi';
 
 import { format } from 'date-fns';
 
@@ -376,15 +382,15 @@ export default {
     },
 
     filterByTopic: function() {
-      console.log('filterByTopic is running');
+      console.log('filterByTopic is running, this.checkedTopics:', this.checkedTopics, 'this.tools:', this.tools);
       if (this.checkedTopics.length !== 0 ){
 
         this.topicTools = [];
 
         this.tools.forEach((tool) => {
-          console.log('in forEach tools, tool.topic:', tool.topic);
+          console.log('in forEach tools, tool.category1:', tool.category1, 'tool.category2:', tool.category2);
           // tool.topics.forEach((topic) => {
-          if (this.checkedTopics.includes(tool.topic)) {
+          if (this.checkedTopics.includes(tool.category1) || this.checkedTopics.includes(tool.category2)) {
             if (!this.topicTools.includes(tool)) {
               this.topicTools.push(tool);
             }
@@ -432,7 +438,7 @@ export default {
     */
     scrollToTop : function () {
       window.scrollTo({
-        top: 0,
+        top: 900,
         behavior: 'smooth',
       });
     },
@@ -523,9 +529,16 @@ export default {
     background-color: #0F4D90;
   }
 
+  a.card.featured-card {
+    border-bottom: 5px solid #0F4D90;
+  }
+
+  a.card.tool-card {
+    border-bottom: 0px;
+  }
+
   a.card {
 
-    border-bottom: 5px solid #0F4D90;
 
     h3 {
       font-size: 24px;
@@ -554,6 +567,13 @@ export default {
 
   .content-block {
     height: 260px;
+
+  }
+
+  .content-footer {
+    position: absolute;
+    bottom: 12px;
+    left: 12px;
   }
 
   // .accordion-checkbox input[type=checkbox]:focus + label {
@@ -588,7 +608,6 @@ export default {
       padding-right: 2rem;
 
       .accordion-title {
-        // font-weight: bold;
         margin: 0px;
         padding-top: 1rem;
         padding-bottom: 1rem;
@@ -624,13 +643,13 @@ export default {
       width: 66%;
 
       .tool-wrap {
-        min-height: 353px;
+        // min-height: 353px;
       }
 
-      .trim {
-        max-height: 188px;
-        overflow: hidden;
-      }
+      // .trim {
+      //   max-height: 188px;
+      //   overflow: hidden;
+      // }
     }
   }
 
