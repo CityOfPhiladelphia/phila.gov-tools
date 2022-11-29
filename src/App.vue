@@ -3,7 +3,7 @@
     id="tools"
     class="phila-ui-skin"
   >
-    <div class="add-margins">
+    <div class="add-margins-top">
       <h1 class="page-title">Tools</h1>
       <h2>Featured Tools</h2>
     </div>
@@ -35,7 +35,7 @@
       </div>
     </div>
 
-    <div class="add-margins">
+    <div class="add-margins-search">
 
     
       <div class="search">
@@ -527,11 +527,6 @@ export default {
 
   padding: 0px;
 
-  .add-margins {
-    margin-left: 16px;
-    margin-right: 16px;
-  }
-
   .page-title {
     border-bottom: 12px solid #2176d2;
   }
@@ -543,14 +538,10 @@ export default {
 
   a.card.featured-card {
     border-bottom: 5px solid #0F4D90;
-    // margin-right: 16px !important;
-    // width: 464px;
   }
 
   a.card.tool-card {
     border-bottom: 0px;
-    display: flex;
-    // height: 100%;
   }
 
   a.card {
@@ -589,11 +580,28 @@ export default {
   }
 
   .tool-wrap {
-    display: flex;
+    // display: flex;
     margin-left: 0px;
     margin-right: 0px;
     margin-bottom: 0px;
   }
+
+  @media (min-width: 760px) {
+    .tool-wrap {
+      display: flex;
+    }
+
+    .add-margins-search {
+      margin-left: 16px;
+      margin-right: 16px;
+    }
+  }
+
+  .add-margins-top {
+    margin-left: 16px;
+    margin-right: 16px;
+  }
+
 
   a.card:hover {
     background-color: #0F4D90;
