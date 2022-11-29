@@ -549,6 +549,8 @@ export default {
 
   a.card.tool-card {
     border-bottom: 0px;
+    display: flex;
+    // height: 100%;
   }
 
   a.card {
@@ -570,13 +572,16 @@ export default {
 
     .content-block {
       // height: 260px;
-      padding: 16px;
+      padding-left: 16px;
+      padding-right: 16px;
+      padding-top: 16px;
+      padding-bottom: 58px;
 
       .content-footer {
-        padding-top: 16px;
-        // position: absolute;
-        // bottom: 16px;
-        // left: 16px;
+        // padding-top: 16px;
+        position: absolute;
+        bottom: 16px;
+        left: 16px;
       }
     }
 
@@ -584,6 +589,7 @@ export default {
   }
 
   .tool-wrap {
+    display: flex;
     margin-left: 0px;
     margin-right: 0px;
     margin-bottom: 0px;
