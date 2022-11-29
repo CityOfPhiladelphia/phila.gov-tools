@@ -3,14 +3,14 @@
     id="tools"
     class="phila-ui-skin"
   >
-
-    <h1 class="page-title">Tools</h1>
-
-    <h2>Featured Tools</h2>
+    <div class="add-margins">
+      <h1 class="page-title">Tools</h1>
+      <h2>Featured Tools</h2>
+    </div>
 
     <div
       id="tiles"
-      class="grid-x grid-margin-x"
+      class="grid-x"
     >
       <div
         v-for="tool in featuredTools"
@@ -25,7 +25,6 @@
             <i class="fa-regular fa-thumbtack"></i>
             <span class="featured-label">FEATURED</span>
             <h3>{{ tool.title }}</h3>
-            <!-- <p>{{ tool.meta_short_description }}</p> -->
             <p>{{ tool.short_description }}</p>
             <div class="content-footer">
               <span class="view-label">View</span>
@@ -36,26 +35,30 @@
       </div>
     </div>
 
-    <div class="search">
-      <input
-        id="search-bar"
-        v-model="search"
-        class="search-field"
-        type="text"
-        placeholder="Search by title or keyword"
-      ><input
-        ref="archive-search-bar"
-        type="submit"
-        class="search-submit"
-        value="Search"
-      >
-      <button
-        v-if="search.length > 0"
-        class="clear-search-btn"
-        @click="clearSearchBar"
-      >
-        <i class="fas fa-times " />
-      </button>
+    <div class="add-margins">
+
+    
+      <div class="search">
+        <input
+          id="search-bar"
+          v-model="search"
+          class="search-field"
+          type="text"
+          placeholder="Search by title or keyword"
+        ><input
+          ref="archive-search-bar"
+          type="submit"
+          class="search-submit"
+          value="Search"
+        >
+        <button
+          v-if="search.length > 0"
+          class="clear-search-btn"
+          @click="clearSearchBar"
+        >
+          <i class="fas fa-times " />
+        </button>
+      </div>
     </div>
 
     <div
@@ -145,10 +148,11 @@
             ref="paginator"
             name="filteredTools"
             :list="filteredTools"
-            class="grid-x grid-margin-x paginate-list"
+            class="grid-x paginate-list"
             tag="div"
             :per="8"
-          >
+            >
+            <!-- class="grid-x grid-margin-x paginate-list" -->
             <div
               v-for="tool in paginated('filteredTools')"
               :key="tool.title"
@@ -196,6 +200,7 @@
           </div>
         </div>
       </div>
+
     </div>
   </div>
 </template>
@@ -520,6 +525,13 @@ export default {
 
 .phila-ui-skin {
 
+  padding: 0px;
+
+  .add-margins {
+    margin-left: 16px;
+    margin-right: 16px;
+  }
+
   .page-title {
     border-bottom: 12px solid #2176d2;
   }
@@ -531,6 +543,8 @@ export default {
 
   a.card.featured-card {
     border-bottom: 5px solid #0F4D90;
+    // margin-right: 16px !important;
+    // width: 464px;
   }
 
   a.card.tool-card {
@@ -539,6 +553,7 @@ export default {
 
   a.card {
 
+    margin: 16px;
 
     h3 {
       font-size: 24px;
@@ -553,6 +568,25 @@ export default {
       padding-right: .5rem;
     }
 
+    .content-block {
+      // height: 260px;
+      padding: 16px;
+
+      .content-footer {
+        padding-top: 16px;
+        // position: absolute;
+        // bottom: 16px;
+        // left: 16px;
+      }
+    }
+
+    
+  }
+
+  .tool-wrap {
+    margin-left: 0px;
+    margin-right: 0px;
+    margin-bottom: 0px;
   }
 
   a.card:hover {
@@ -565,16 +599,7 @@ export default {
     }
   }
 
-  .content-block {
-    height: 260px;
-
-  }
-
-  .content-footer {
-    position: absolute;
-    bottom: 12px;
-    left: 12px;
-  }
+  
 
   // .accordion-checkbox input[type=checkbox]:focus + label {
   //   border: 0px none !important;
@@ -585,7 +610,7 @@ export default {
 #tools {
   margin: 0 auto;
   max-width: 75rem;
-  padding: 0px 10px 0px 10px;
+  // padding: 0px 10px 0px 10px;
 
  .clear-search-btn {
     position: absolute;
@@ -605,7 +630,10 @@ export default {
 
     #filters-container {
       width: 33%;
-      padding-right: 2rem;
+      margin-left: 16px;
+      margin-right: 16px;
+      margin-top: 16px;
+      // padding-right: 2rem;
 
       .accordion-title {
         margin: 0px;
@@ -643,6 +671,8 @@ export default {
       width: 66%;
 
       .tool-wrap {
+        margin-left: 0px !important;
+        margin-right: 0px !important;
         // min-height: 353px;
       }
 
@@ -654,6 +684,7 @@ export default {
   }
 
   .tool-pages {
+    margin-right: 16px;
     display: flex;
     justify-content: space-between;
   }
