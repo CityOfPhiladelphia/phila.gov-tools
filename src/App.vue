@@ -708,6 +708,7 @@ export default {
   }
 
   .tool-pages {
+    margin-left: 16px;
     margin-right: 16px;
     display: flex;
     justify-content: space-between;
@@ -716,6 +717,7 @@ export default {
     @media (max-width: 760px) {
 
       .tool-pages {
+        margin-left: 0px;
         margin-right: 0px;
       }
 
