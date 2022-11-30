@@ -442,10 +442,13 @@ export default {
     * @desc scrolls to top from paginate buttons
     */
     scrollToTop : function () {
-      window.scrollTo({
-        top: 900,
+      document.getElementById('tools-container').scrollIntoView({
         behavior: 'smooth',
       });
+      // window.scrollTo({
+      //   top: 900,
+      //   behavior: 'smooth',
+      // });
     },
 
     checkEmpty: function() {
