@@ -589,6 +589,13 @@ export default {
     margin-bottom: 0px;
   }
 
+  @media (max-width: 760px) {
+    a.card.tool-card {
+      margin-left: 0px;
+      margin-right: 0px;
+    }
+  }
+
   @media (min-width: 760px) {
     .tool-wrap {
       display: flex;
@@ -707,6 +714,10 @@ export default {
   }
 
     @media (max-width: 760px) {
+
+      .tool-pages {
+        margin-right: 0px;
+      }
 
       .search {
         width: 95%;
