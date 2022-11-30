@@ -4,7 +4,7 @@
     class="phila-ui-skin"
   >
     <div class="add-margins-top">
-      <h1 class="page-title">Tools</h1>
+      <!-- <h1 class="page-title">Tools</h1> -->
       <h2>Featured Tools</h2>
     </div>
 
