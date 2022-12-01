@@ -35,8 +35,11 @@
       </div>
     </div>
 
-    <div class="add-margins-search">
+    <div class="add-margins-top">
+      <h2>Browse Tools</h2>
+    </div>
 
+    <div class="add-margins-search">
     
       <div class="search">
         <input
@@ -375,6 +378,15 @@ export default {
           for (let record of response.data.records) {
             this.topics.push(record.fields);
           }
+          this.topics.sort(function(a, b) {
+            if (a.name < b.name) {
+              return -1;
+            }
+            if (a.name > b.name) {
+              return 1;
+            }
+            return 0;
+          })
         })
         .catch(e => {})
         .finally(() => {});
@@ -556,8 +568,9 @@ export default {
     }
 
     .featured-label {
-      font-family: "Open Sans", sans-serif;
-      padding-left: 1rem;
+      font-family: "Montserrat", sans-serif;
+      font-size: 14px;
+      padding-left: 10px;
     }
 
     .view-label {
@@ -572,10 +585,10 @@ export default {
       padding-bottom: 58px;
 
       .content-footer {
-        // padding-top: 16px;
         position: absolute;
         bottom: 16px;
         left: 16px;
+        color: #0f4d90;
       }
     }
 
@@ -602,6 +615,7 @@ export default {
     }
 
     .add-margins-search {
+      margin-top: 28px;
       margin-left: 16px;
       margin-right: 16px;
     }
