@@ -538,6 +538,14 @@ export default {
 
 <style lang="scss">
 
+html {
+  font-size: 16px;
+}
+
+// .breadcrumbs a {
+//   font-size: 12px;
+// }
+
 .phila-ui-skin {
 
   padding: 0px;
