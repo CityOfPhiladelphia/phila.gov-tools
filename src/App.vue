@@ -569,7 +569,7 @@ html {
 
   a.card {
 
-    margin: 16px;
+    margin: 1rem;
 
     h3 {
       font-size: 24px;
@@ -586,15 +586,15 @@ html {
     }
 
     .content-block {
-      padding-left: 16px;
-      padding-right: 16px;
-      padding-top: 16px;
+      padding-left: 1rem;
+      padding-right: 1rem;
+      padding-top: 1rem;
       padding-bottom: 58px;
 
       .content-footer {
         position: absolute;
-        bottom: 16px;
-        left: 16px;
+        bottom: 1rem;
+        left: 1rem;
         color: #0f4d90;
       }
 
