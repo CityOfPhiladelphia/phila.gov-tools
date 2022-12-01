@@ -153,8 +153,9 @@
             :list="filteredTools"
             class="grid-x paginate-list"
             tag="div"
-            :per="8"
+            :per="perPage"
             >
+            <!-- :per="9" -->
             <!-- class="grid-x grid-margin-x paginate-list" -->
             <div
               v-for="tool in paginated('filteredTools')"
@@ -255,10 +256,10 @@ export default {
           'short_description',
         ],
       },
+      perPage: 8,
     };
   },
   computed: {
-
   },
 
   watch: {
@@ -312,9 +313,26 @@ export default {
     this.getAllTopics();
     await this.getAllTools();
     this.getFeaturedTools();
+
+    this.setPerPage();
+    addEventListener('resize', (event) => {
+      this.setPerPage();
+      // if (window.innerWidth < 1050) {
+      //   this.perPage = 8;
+      // } else {
+      //   this.perPage = 9;
+      // }
+    });
   },
 
   methods: {
+    setPerPage() {
+      if (window.innerWidth < 1050) {
+        this.perPage = 8;
+      } else {
+        this.perPage = 9;
+      }
+    },
     getFeaturedTools() {
       let currentDate = new Date();
       let currentMonth = format(currentDate, 'MMMM');
@@ -743,10 +761,16 @@ html {
         // min-height: 353px;
       }
 
-      // .trim {
-      //   max-height: 188px;
-      //   overflow: hidden;
-      // }
+    }
+
+    @media (min-width: 1050px) {
+      #tools-display {
+        width: 75%;
+      }
+
+      #filters-container {
+        width: 25%;
+      }
     }
   }
 
