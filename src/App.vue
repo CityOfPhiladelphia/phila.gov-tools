@@ -539,7 +539,7 @@ export default {
 <style lang="scss">
 
 html {
-  font-size: 16px;
+  font-size: 16px !important;
 }
 
 // .breadcrumbs a {
