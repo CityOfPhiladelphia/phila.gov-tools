@@ -623,14 +623,14 @@ html {
 
     .add-margins-search {
       margin-top: 28px;
-      margin-left: 16px;
-      margin-right: 16px;
+      margin-left: 1rem;
+      margin-right: 1rem;
     }
   }
 
   .add-margins-top {
-    margin-left: 16px;
-    margin-right: 16px;
+    margin-left: 1rem;
+    margin-right: 1rem;
   }
 
 
@@ -662,7 +662,7 @@ html {
 
  .clear-search-btn {
     position: absolute;
-    top:16px;
+    top:1rem;
     right: 70px;
     padding: 0;
     font-size: 20px;
@@ -678,9 +678,9 @@ html {
 
     #filters-container {
       width: 33%;
-      margin-left: 16px;
-      margin-right: 16px;
-      margin-top: 16px;
+      margin-left: 1rem;
+      margin-right: 1rem;
+      margin-top: 1rem;
       // padding-right: 2rem;
 
       .accordion-title {
@@ -732,8 +732,8 @@ html {
   }
 
   .tool-pages {
-    margin-left: 16px;
-    margin-right: 16px;
+    margin-left: 1rem;
+    margin-right: 1rem;
     display: flex;
     justify-content: space-between;
   }
