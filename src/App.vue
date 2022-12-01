@@ -159,7 +159,7 @@
             <div
               v-for="tool in paginated('filteredTools')"
               :key="tool.title"
-              class="medium-8 cell mbl tool-wrap"
+              class="medium-12 large-8 cell mbl tool-wrap"
             >
               <a
                 class="card tool-card"
