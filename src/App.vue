@@ -578,7 +578,6 @@ export default {
     }
 
     .content-block {
-      // height: 260px;
       padding-left: 16px;
       padding-right: 16px;
       padding-top: 16px;
@@ -590,13 +589,13 @@ export default {
         left: 16px;
         color: #0f4d90;
       }
+
     }
 
     
   }
 
   .tool-wrap {
-    // display: flex;
     margin-left: 0px;
     margin-right: 0px;
     margin-bottom: 0px;
@@ -635,8 +634,11 @@ export default {
     h3 {
       color: #ffffff;
     }
-  }
 
+    .content-footer {
+      color: #ffffff;
+    }
+  }
   
 
   // .accordion-checkbox input[type=checkbox]:focus + label {
