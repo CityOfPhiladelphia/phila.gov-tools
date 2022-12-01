@@ -5,7 +5,7 @@
   >
     <div class="add-margins-top">
       <!-- <h1 class="page-title">Tools</h1> -->
-      <h2>Featured Tools</h2>
+      <h2>Featured tools</h2>
     </div>
 
     <div
@@ -36,7 +36,7 @@
     </div>
 
     <div class="add-margins-top">
-      <h2>Browse Tools</h2>
+      <h2>Browse tools</h2>
     </div>
 
     <div class="add-margins-search">
@@ -159,7 +159,7 @@
             <div
               v-for="tool in paginated('filteredTools')"
               :key="tool.title"
-              class="medium-12 cell mbl tool-wrap"
+              class="medium-8 cell mbl tool-wrap"
             >
               <a
                 class="card tool-card"
@@ -360,6 +360,24 @@ export default {
             this.tools.push(record.fields);
             this.filteredTools.push(record.fields);
           }
+          this.tools.sort(function(a, b) {
+            if (a.title < b.title) {
+              return -1;
+            }
+            if (a.title > b.title) {
+              return 1;
+            }
+            return 0;
+          });
+          this.filteredTools.sort(function(a, b) {
+            if (a.title < b.title) {
+              return -1;
+            }
+            if (a.title > b.title) {
+              return 1;
+            }
+            return 0;
+          });
         })
         .catch(e => {})
         .finally(() => {
@@ -386,7 +404,7 @@ export default {
               return 1;
             }
             return 0;
-          })
+          });
         })
         .catch(e => {})
         .finally(() => {});
@@ -539,7 +557,7 @@ export default {
 <style lang="scss">
 
 html {
-  font-size: 16px;
+  // font-size: 16px;
 }
 
 // .breadcrumbs a {
@@ -657,7 +675,8 @@ html {
 
 #tools {
   margin: 0 auto;
-  max-width: 75rem;
+  max-width: 1270px;
+  // max-width: 75rem;
   // padding: 0px 10px 0px 10px;
 
  .clear-search-btn {
@@ -677,7 +696,7 @@ html {
     display: flex;
 
     #filters-container {
-      width: 33%;
+      width: 25%;
       margin-left: 1rem;
       margin-right: 1rem;
       margin-top: 1rem;
@@ -716,7 +735,7 @@ html {
     }
 
     #tools-display {
-      width: 66%;
+      width: 75%;
 
       .tool-wrap {
         margin-left: 0px !important;
