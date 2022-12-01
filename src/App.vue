@@ -696,7 +696,7 @@ html {
     display: flex;
 
     #filters-container {
-      width: 25%;
+      width: 33%;
       margin-left: 1rem;
       margin-right: 1rem;
       margin-top: 1rem;
@@ -735,7 +735,7 @@ html {
     }
 
     #tools-display {
-      width: 75%;
+      width: 66%;
 
       .tool-wrap {
         margin-left: 0px !important;
