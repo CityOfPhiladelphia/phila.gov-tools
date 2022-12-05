@@ -316,6 +316,7 @@ export default {
 
     this.setPerPage();
     addEventListener('resize', (event) => {
+      console.log('window.innerWidth:', window.innerWidth);
       this.setPerPage();
       // if (window.innerWidth < 1050) {
       //   this.perPage = 8;
@@ -645,14 +646,14 @@ html {
     margin-bottom: 0px;
   }
 
-  @media (max-width: 760px) {
+  @media (max-width: 749px) {
     a.card.tool-card {
       margin-left: 0px;
       margin-right: 0px;
     }
   }
 
-  @media (min-width: 760px) {
+  @media (min-width: 750px) {
     .tool-wrap {
       display: flex;
     }
@@ -781,7 +782,7 @@ html {
     justify-content: space-between;
   }
 
-    @media (max-width: 760px) {
+    @media (max-width: 749px) {
 
       .tool-pages {
         margin-left: 0px;
