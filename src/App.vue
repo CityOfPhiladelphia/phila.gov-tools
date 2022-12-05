@@ -199,6 +199,11 @@
                 next: 'Next',
                 prev: 'Previous'
               }"
+              :classes="{
+                '.number': ['number', 'tabbable'],
+                '.left-arrow': ['left-arrow', 'tabbable'],
+                '.right-arrow': ['right-arrow', 'tabbable'],
+              }"
               @change="onPageChange(); scrollToTop(); "
             />
           </div>
@@ -314,15 +319,20 @@ export default {
     await this.getAllTools();
     this.getFeaturedTools();
 
+    document.querySelectorAll('.tabbable a').forEach(x => {
+      x.tabIndex = 0;
+      x.addEventListener('keypress', function (event) {
+        if (event.keyCode === 13) {
+          x.click();
+        }
+      })
+    });
+
+
     this.setPerPage();
     addEventListener('resize', (event) => {
       console.log('window.innerWidth:', window.innerWidth);
       this.setPerPage();
-      // if (window.innerWidth < 1050) {
-      //   this.perPage = 8;
-      // } else {
-      //   this.perPage = 9;
-      // }
     });
   },
 
@@ -780,6 +790,18 @@ html {
     margin-right: 1rem;
     display: flex;
     justify-content: space-between;
+
+    // li {
+    //   display: block;
+    // }
+    // a:active, a:focus,
+    // li:active, li:focus {border: 5px solid orange}
+
+    // li:nth-of-type(1) {background-color: red}
+    // li:nth-of-type(2) {background-color: yellow}
+    // li:nth-of-type(3) {background-color: blue}
+    // li:nth-of-type(4) {background-color: green}
+
   }
 
     @media (max-width: 749px) {
