@@ -35,12 +35,11 @@
       </div>
     </div>
 
-    <div class="add-margins-top">
+    <div id="browse-tools" class="add-margins-top">
       <h2>Browse tools</h2>
     </div>
 
-    <div class="add-margins-search">
-    
+    <div class="add-margins-search">    
       <div class="search">
         <input
           id="search-bar"
@@ -501,13 +500,9 @@ export default {
     * @desc scrolls to top from paginate buttons
     */
     scrollToTop : function () {
-      document.getElementById('tools-container').scrollIntoView({
+      document.getElementById('browse-tools').scrollIntoView({
         behavior: 'smooth',
       });
-      // window.scrollTo({
-      //   top: 900,
-      //   behavior: 'smooth',
-      // });
     },
 
     checkEmpty: function() {
@@ -585,14 +580,6 @@ export default {
 
 <style lang="scss">
 
-html {
-  // font-size: 16px;
-}
-
-// .breadcrumbs a {
-//   font-size: 12px;
-// }
-
 .phila-ui-skin {
 
   padding: 0px;
@@ -644,10 +631,7 @@ html {
         left: 1rem;
         color: #0f4d90;
       }
-
-    }
-
-    
+    }  
   }
 
   .tool-wrap {
@@ -680,7 +664,6 @@ html {
     margin-right: 1rem;
   }
 
-
   a.card:hover {
     background-color: #0F4D90;
     color: #ffffff;
@@ -695,18 +678,11 @@ html {
     }
   }
   
-
-  // .accordion-checkbox input[type=checkbox]:focus + label {
-  //   border: 0px none !important;
-  // }
-
 }
 
 #tools {
   margin: 0 auto;
   max-width: 1270px;
-  // max-width: 75rem;
-  // padding: 0px 10px 0px 10px;
 
  .clear-search-btn {
     position: absolute;
@@ -729,7 +705,6 @@ html {
       margin-left: 1rem;
       margin-right: 1rem;
       margin-top: 1rem;
-      // padding-right: 2rem;
 
       .accordion-title {
         margin: 0px;
@@ -769,9 +744,7 @@ html {
       .tool-wrap {
         margin-left: 0px !important;
         margin-right: 0px !important;
-        // min-height: 353px;
       }
-
     }
 
     @media (min-width: 1050px) {
@@ -790,47 +763,35 @@ html {
     margin-right: 1rem;
     display: flex;
     justify-content: space-between;
-
-    // li {
-    //   display: block;
-    // }
-    // a:active, a:focus,
-    // li:active, li:focus {border: 5px solid orange}
-
-    // li:nth-of-type(1) {background-color: red}
-    // li:nth-of-type(2) {background-color: yellow}
-    // li:nth-of-type(3) {background-color: blue}
-    // li:nth-of-type(4) {background-color: green}
-
   }
 
-    @media (max-width: 749px) {
+  @media (max-width: 749px) {
 
-      .tool-pages {
-        margin-left: 0px;
-        margin-right: 0px;
+    .tool-pages {
+      margin-left: 0px;
+      margin-right: 0px;
+    }
+
+    .search {
+      width: 95%;
+      margin: 0 auto;
+    }
+
+    #tools-container {
+      flex-direction: column;
+
+      #filters-container {
+        width: 95%;
+        margin: 0 auto;
+        padding:0 0 1rem 0
       }
 
-      .search {
+      #tools-display {
         width: 95%;
         margin: 0 auto;
       }
-
-      #tools-container {
-        flex-direction: column;
-
-        #filters-container {
-          width: 95%;
-          margin: 0 auto;
-          padding:0 0 1rem 0
-        }
-
-        #tools-display {
-          width: 95%;
-          margin: 0 auto;
-        }
-      }
     }
+  }
 
 }
 
