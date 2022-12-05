@@ -216,8 +216,8 @@ import VuePaginate from "vue-paginate";
 Vue.use(VueFuse);
 Vue.use(VuePaginate);
 
-const toolsEndpoint = 'https://api.airtable.com/v0/appPVX1yJCVtJhklp/tools2?api_key=keyZ84hQSumaKJOhi';
-const topicsEndpoint = 'https://api.airtable.com/v0/appPVX1yJCVtJhklp/topics2?api_key=keyZ84hQSumaKJOhi';
+const toolsEndpoint = 'https://api.airtable.com/v0/appPVX1yJCVtJhklp/tools?api_key=keyZ84hQSumaKJOhi';
+const topicsEndpoint = 'https://api.airtable.com/v0/appPVX1yJCVtJhklp/topics?api_key=keyZ84hQSumaKJOhi';
 
 import { format } from 'date-fns';
 
