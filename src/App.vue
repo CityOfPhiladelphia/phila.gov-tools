@@ -4,7 +4,6 @@
     class="phila-ui-skin"
   >
     <div class="add-margins-top">
-      <!-- <h1 class="page-title">Tools</h1> -->
       <h2>Featured tools</h2>
     </div>
 
@@ -21,7 +20,6 @@
           :href="tool.link"
         >
           <div class="content-block">
-            <!-- <h3 :class="{ 'external' : tool.link.includes('http') }">{{ tool.title }}</h3> -->
             <i class="fa-regular fa-thumbtack"></i>
             <span class="featured-label">FEATURED</span>
             <h3>{{ tool.title }}</h3>
@@ -154,8 +152,6 @@
             tag="div"
             :per="perPage"
             >
-            <!-- :per="9" -->
-            <!-- class="grid-x grid-margin-x paginate-list" -->
             <div
               v-for="tool in paginated('filteredTools')"
               :key="tool.title"
@@ -166,9 +162,7 @@
                 :href="tool.link"
               >
                 <div class="content-block">
-                  <!-- <h3 :class="{ 'external' : tool.link.includes('http') }">{{ tool.title }}</h3> -->
                   <h3>{{ tool.title }}</h3>
-                  <!-- <p>{{ tool.meta_short_description }}</p> -->
                   <p>{{ tool.short_description }}</p>
                   <div class="content-footer">
                     <span class="view-label">View</span>
@@ -270,14 +264,12 @@ export default {
 
     routerQuery: {
       handler: function () {
-        console.log('watch routerQuery is firing');
         this.updateRouter();
       },
       deep: true,
     },
 
     search(value) {
-      console.log('watch search is running, value:', value);
       this.filterResults();
       if (value.length > 3) {
         this.updateRouterQuery('search', value);
@@ -287,24 +279,12 @@ export default {
 
     },
 
-    // filteredTools(val) {
-    //   console.log('watch filteredTools is firing, val:', val);
-    //   // if (val.length === 0) {
-    //   //   // this.getRelatedServices();
-    //   //   this.showRelated = true;
-    //   // } else {
-    //   //   this.showRelated = false;
-    //   // }
-    // },
-
     checkedTopics(val) {
-      console.log('watch checkedTopics is firing, val:', val, 'and will call filterResults and updateRouterQuery');
       this.filterResults();
       this.updateRouterQuery('checkedTopics', val);
     },
 
     loading(val) {
-      console.log('watch loading is firing');
       if(!val) {
         this.initFilters();
         this.filterResults();
@@ -327,10 +307,8 @@ export default {
       })
     });
 
-
     this.setPerPage();
     addEventListener('resize', (event) => {
-      console.log('window.innerWidth:', window.innerWidth);
       this.setPerPage();
     });
   },
@@ -349,7 +327,6 @@ export default {
 
       // seasonal priority
       for (let tool of this.tools) {
-        // console.log('in getFeaturedTools');
         if (tool.priority_seasonal_value && tool.priority_seasonal_value.includes(currentMonth)) {
           this.featuredTools.push(tool);
         }
@@ -368,16 +345,13 @@ export default {
 
       // fixed priority
       let fixedLength = 4-this.featuredTools.length;
-      // console.log('getFeaturedTools, fixedLength:', fixedLength, 'currentDate:', currentDate, 'currentMonth:', currentMonth);
 
       for (let i=1; i<=fixedLength; i++) {
         let iTool = this.tools.filter(tool => tool.priority_fixed_value == i)[0];
-        // console.log('getFeaturedTools fixed loop, i:', i, 'iTool:', iTool);
         this.featuredTools.push(iTool);
       }
     },
     async getAllTools() {
-      // console.log('getAllTools is running');
       await axios
         .get( toolsEndpoint , {
           params: {
@@ -414,7 +388,6 @@ export default {
         });
     },
     getAllTopics: function () {
-      // console.log('getAllTopics is running');
       axios
         .get( topicsEndpoint , {
           params: {
@@ -438,21 +411,15 @@ export default {
         .finally(() => {});
     },
     filterResults: async function () {
-      console.log('filterResults is running');
       await this.filterByTopic();
       await this.filterBySearch();
       await this.checkEmpty();
     },
 
     filterByTopic: function() {
-      console.log('filterByTopic is running, this.checkedTopics:', this.checkedTopics, 'this.tools:', this.tools);
       if (this.checkedTopics.length !== 0 ){
-
         this.topicTools = [];
-
         this.tools.forEach((tool) => {
-          console.log('in forEach tools, tool.category1:', tool.category1, 'tool.category2:', tool.category2);
-          // tool.topics.forEach((topic) => {
           if (this.checkedTopics.includes(tool.category1) || this.checkedTopics.includes(tool.category2)) {
             if (!this.topicTools.includes(tool)) {
               this.topicTools.push(tool);
@@ -465,17 +432,13 @@ export default {
     },
 
     filterBySearch: function() {
-      console.log('filterBySearch is running, this.search:', this.search, 'this.topicTools:', this.topicTools);
       if (this.search) {
-        console.log('filterBySearch, if this.search is running');
         this.$search(this.search, this.topicTools, this.searchOptions).then(tools => {
           this.filteredTools = tools;
         });
       } else {
-        console.log('filterBySearch, else is running');
         this.filteredTools = this.topicTools;
       }
-
     },
 
     toggleTopics: function() {
@@ -483,7 +446,6 @@ export default {
     },
 
     updateRouterQuery: function (key, value) {
-      console.log('updateRouterQuery is running');
       if (typeof value === 'undefined' || value === '' || value === null) {
         Vue.delete(this.routerQuery, key);
       } else {
@@ -492,7 +454,6 @@ export default {
     },
 
     clearSearchBar: function () {
-      console.log('clearSearchBar is running');
       this.search = "";
     },
 
@@ -506,19 +467,16 @@ export default {
     },
 
     checkEmpty: function() {
-      console.log('checkEmpty is running');
       this.emptyResponse = (this.filteredTools.length === 0 ) ? true : false;
     },
 
     resetRouterQuery: function () {
-      console.log('resetRouterQuery is running');
       for (let routeKey in this.$route.query) {
         Vue.delete(this.routerQuery, routeKey);
       }
     },
 
     initFilters: function() {
-      console.log('initFilters is running');
       if (Object.keys(this.$route.query).length !== 0) {
         for (let routerKey in this.$route.query) {
           if(routerKey === "checkedTopics"){
@@ -542,7 +500,6 @@ export default {
     },
 
     updateRouter: function () {
-      console.log('updateRouter is running');
       if (this.routerQuery  === this.$route.query) {
         return;
       }
@@ -555,21 +512,18 @@ export default {
     },
 
     onPageChange() {
-      console.log('onPageChange is running');
       let newPage = this.$refs.paginator.currentPage + 1;
       this.page = newPage;
       this.updateRouterQuery('page', newPage);
     },
 
     setPage: function() {
-      console.log('setPage is running');
       if (this.page) {
         this.$refs.paginator.goToPage(this.page);
       }
     },
 
     clearAllFilters() {
-      console.log('clearAllFilters is running');
       this.checkedTopics = [];
       this.search = '';
       this.page = 1;
