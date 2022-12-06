@@ -7,13 +7,10 @@
       <h2>Featured tools</h2>
     </div>
 
-    <div
-      id="tiles"
-      class="grid-x"
-    >
+    <div class="grid-x">
       <div
         v-for="tool in featuredTools"
-        class="medium-12 cell mbl tool-wrap"
+        class="medium-12 cell mbl card-wrap"
       >
         <a
           class="card featured-card"
@@ -33,7 +30,7 @@
       </div>
     </div>
 
-    <div id="browse-tools" class="add-margins-top">
+    <div id="search-bar-label" class="add-margins-top">
       <h2>Browse tools</h2>
     </div>
 
@@ -45,7 +42,8 @@
           class="search-field"
           type="text"
           placeholder="Search by title or keyword"
-        ><input
+        >
+        <input
           ref="archive-search-bar"
           type="submit"
           class="search-submit"
@@ -61,13 +59,9 @@
       </div>
     </div>
 
-    <div
-      id="tools-container"
-    >
+    <div id="main-container">
       <div id="filters-container">
-        <div
-          class="accordion"
-        >
+        <div class="accordion">
           <div
             class="accordion-item"
             :class="{'is-active' : showTopics}"
@@ -99,11 +93,9 @@
                   :name="value.slug"
                   @click="filterResults"
                 >
-                <label
-                  :for="value.slug"
-
-                  class="tool-category"
-                ><span v-html="value.name" /></label>
+                <label :for="value.slug">
+                  <span v-html="value.name" />
+                </label>
               </div>
             </fieldset>
           </div>
@@ -118,7 +110,7 @@
         </div>
       </div>
 
-      <div id="tools-display">
+      <div id="main-cards-display">
         <div
           v-show="loading"
           class="mtm center"
@@ -142,7 +134,6 @@
 
         <div id="tiles">
           <paginate
-
             v-if="filteredTools.length > 0 "
             id="tool-results"
             ref="paginator"
@@ -151,11 +142,11 @@
             class="grid-x paginate-list"
             tag="div"
             :per="perPage"
-            >
+          >
             <div
               v-for="tool in paginated('filteredTools')"
               :key="tool.title"
-              class="medium-12 large-8 cell mbl tool-wrap"
+              class="medium-12 large-8 cell mbl card-wrap"
             >
               <a
                 class="card tool-card"
@@ -173,7 +164,7 @@
             </div>
           </paginate>
 
-          <div class="tool-pages">
+          <div class="card-pages">
             <div
               v-show="!loading && !emptyResponse && !failure"
               class="tool-length"
@@ -276,7 +267,6 @@ export default {
       } else {
         this.updateRouterQuery('search', null);
       }
-
     },
 
     checkedTopics(val) {
@@ -461,7 +451,7 @@ export default {
     * @desc scrolls to top from paginate buttons
     */
     scrollToTop : function () {
-      document.getElementById('browse-tools').scrollIntoView({
+      document.getElementById('search-bar-label').scrollIntoView({
         behavior: 'smooth',
       });
     },
@@ -537,6 +527,8 @@ export default {
 .phila-ui-skin {
 
   padding: 0px;
+  margin: 0 auto;
+  max-width: 1270px;
 
   .page-title {
     border-bottom: 12px solid #2176d2;
@@ -588,29 +580,10 @@ export default {
     }  
   }
 
-  .tool-wrap {
+  .card-wrap {
     margin-left: 0px;
     margin-right: 0px;
     margin-bottom: 0px;
-  }
-
-  @media (max-width: 749px) {
-    a.card.tool-card {
-      margin-left: 0px;
-      margin-right: 0px;
-    }
-  }
-
-  @media (min-width: 750px) {
-    .tool-wrap {
-      display: flex;
-    }
-
-    .add-margins-search {
-      margin-top: 28px;
-      margin-left: 1rem;
-      margin-right: 1rem;
-    }
   }
 
   .add-margins-top {
@@ -632,11 +605,10 @@ export default {
     }
   }
   
-}
 
-#tools {
-  margin: 0 auto;
-  max-width: 1270px;
+
+
+
 
  .clear-search-btn {
     position: absolute;
@@ -651,7 +623,14 @@ export default {
     color: rgba(60, 60, 60, 0.5);
   }
 
-  #tools-container {
+  .card-pages {
+    margin-left: 1rem;
+    margin-right: 1rem;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  #main-container {
     display: flex;
 
     #filters-container {
@@ -692,36 +671,43 @@ export default {
       }
     }
 
-    #tools-display {
-      width: 66%;
+    
+  }
 
-      .tool-wrap {
-        margin-left: 0px !important;
-        margin-right: 0px !important;
-      }
+  #main-cards-display {
+    width: 66%;
+  }
+
+  @media (min-width: 1050px) {
+    #main-cards-display {
+      width: 75%;
     }
 
-    @media (min-width: 1050px) {
-      #tools-display {
-        width: 75%;
-      }
-
-      #filters-container {
-        width: 25%;
-      }
+    #filters-container {
+      width: 25%;
     }
   }
 
-  .tool-pages {
-    margin-left: 1rem;
-    margin-right: 1rem;
-    display: flex;
-    justify-content: space-between;
+  @media (min-width: 750px) {
+    .card-wrap {
+      display: flex;
+    }
+
+    .add-margins-search {
+      margin-top: 28px;
+      margin-left: 1rem;
+      margin-right: 1rem;
+    }
   }
 
   @media (max-width: 749px) {
 
-    .tool-pages {
+    a.card.tool-card {
+      margin-left: 0px;
+      margin-right: 0px;
+    }
+
+    .card-pages {
       margin-left: 0px;
       margin-right: 0px;
     }
@@ -731,7 +717,7 @@ export default {
       margin: 0 auto;
     }
 
-    #tools-container {
+    #main-container {
       flex-direction: column;
 
       #filters-container {
@@ -740,7 +726,7 @@ export default {
         padding:0 0 1rem 0
       }
 
-      #tools-display {
+      #main-cards-display {
         width: 95%;
         margin: 0 auto;
       }
