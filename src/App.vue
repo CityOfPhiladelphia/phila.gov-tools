@@ -149,7 +149,7 @@
               class="medium-12 large-8 cell mbl card-wrap"
             >
               <a
-                class="card tool-card"
+                class="card app-card"
                 :href="tool.link"
               >
                 <div class="content-block">
@@ -192,9 +192,8 @@
             />
           </div>
         </div>
-      </div>
-
-    </div>
+      </div> <!-- end of #main-cards-display -->
+    </div> <!-- end of #main-container -->
   </div>
 </template>
 <script>
@@ -537,18 +536,18 @@ export default {
   .clear-button {
     color: #ffffff;
     background-color: #0F4D90;
+    margin: 0 auto;
   }
 
   a.card.featured-card {
     border-bottom: 5px solid #0F4D90;
   }
 
-  a.card.tool-card {
+  a.card.app-card {
     border-bottom: 0px;
   }
 
   a.card {
-
     margin: 1rem;
 
     h3 {
@@ -580,17 +579,6 @@ export default {
     }  
   }
 
-  .card-wrap {
-    margin-left: 0px;
-    margin-right: 0px;
-    margin-bottom: 0px;
-  }
-
-  .add-margins-top {
-    margin-left: 1rem;
-    margin-right: 1rem;
-  }
-
   a.card:hover {
     background-color: #0F4D90;
     color: #ffffff;
@@ -604,12 +592,18 @@ export default {
       color: #ffffff;
     }
   }
+
+  .card-wrap {
+    margin-left: 0px;
+    margin-right: 0px;
+    margin-bottom: 0px;
+  }
+
+  .add-margins-top {
+    margin-left: 1rem;
+    margin-right: 1rem;
+  }
   
-
-
-
-
-
  .clear-search-btn {
     position: absolute;
     top:1rem;
@@ -632,46 +626,40 @@ export default {
 
   #main-container {
     display: flex;
+  }
 
-    #filters-container {
-      width: 33%;
-      margin-left: 1rem;
-      margin-right: 1rem;
-      margin-top: 1rem;
+  #filters-container {
+    width: 33%;
+    margin-left: 1rem;
+    margin-right: 1rem;
+    margin-top: 1rem;
 
-      .accordion-title {
-        margin: 0px;
-        padding-top: 1rem;
-        padding-bottom: 1rem;
-      }
-
-      .acc-content {
-        background-color: white;
-        padding: 1rem;
-
-        .accordion-checkbox {
-
-          user-select: none;
-
-          input[type="checkbox"]:focus + label {
-            border:2px solid black;
-          }
-
-          .hidden-checkbox {
-            display: block;
-            opacity: 1;         // hide it visually
-            z-index: -1;        // avoid unintended clicks
-            position: absolute; // don't affect other elements positioning
-          }
-        }
-      }
-
-      .clear-button {
-        margin: 0 auto;
-      }
+    .accordion-title {
+      margin: 0px;
+      padding-top: 1rem;
+      padding-bottom: 1rem;
     }
 
-    
+    .acc-content {
+      background-color: white;
+      padding: 1rem;
+
+      .accordion-checkbox {
+
+        user-select: none;
+
+        input[type="checkbox"]:focus + label {
+          border:2px solid black;
+        }
+
+        .hidden-checkbox {
+          display: block;
+          opacity: 1;         // hide it visually
+          z-index: -1;        // avoid unintended clicks
+          position: absolute; // don't affect other elements positioning
+        }
+      }
+    }
   }
 
   #main-cards-display {
@@ -679,12 +667,12 @@ export default {
   }
 
   @media (min-width: 1050px) {
-    #main-cards-display {
-      width: 75%;
-    }
-
     #filters-container {
       width: 25%;
+    }
+
+    #main-cards-display {
+      width: 75%;
     }
   }
 
@@ -701,8 +689,22 @@ export default {
   }
 
   @media (max-width: 749px) {
+    #main-container {
+      flex-direction: column;
+    }
 
-    a.card.tool-card {
+    #filters-container {
+      width: 95%;
+      margin: 0 auto;
+      padding:0 0 1rem 0
+    }
+
+    #main-cards-display {
+      width: 95%;
+      margin: 0 auto;
+    }
+
+    a.card.app-card {
       margin-left: 0px;
       margin-right: 0px;
     }
@@ -715,21 +717,6 @@ export default {
     .search {
       width: 95%;
       margin: 0 auto;
-    }
-
-    #main-container {
-      flex-direction: column;
-
-      #filters-container {
-        width: 95%;
-        margin: 0 auto;
-        padding:0 0 1rem 0
-      }
-
-      #main-cards-display {
-        width: 95%;
-        margin: 0 auto;
-      }
     }
   }
 
