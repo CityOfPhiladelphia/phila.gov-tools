@@ -39,6 +39,7 @@
         <input
           id="search-bar"
           v-model="search"
+          title="search-bar"
           class="search-field"
           type="text"
           placeholder="Search by title or keyword"
