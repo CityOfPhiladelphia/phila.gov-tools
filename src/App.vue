@@ -10,6 +10,7 @@
     <div class="grid-x">
       <div
         v-for="tool in featuredTools"
+        :key="tool.title"
         class="medium-12 cell mbl card-wrap"
       >
         <a
@@ -17,20 +18,23 @@
           :href="tool.link"
         >
           <div class="content-block">
-            <i class="fa-regular fa-thumbtack"></i>
+            <i class="fa-regular fa-thumbtack" />
             <span class="featured-label">FEATURED</span>
             <h3>{{ tool.title }}</h3>
             <p>{{ tool.short_description }}</p>
             <div class="content-footer">
               <span class="view-label">View</span>
-              <i class="fa-solid fa-angle-right"></i>
+              <i class="fa-solid fa-angle-right" />
             </div>
           </div>
         </a>
       </div>
     </div>
 
-    <div id="search-bar-label" class="add-margins-top">
+    <div 
+      id="search-bar-label" 
+      class="add-margins-top"
+    >
       <h2>Browse tools</h2>
     </div>
 
@@ -158,7 +162,7 @@
                   <p>{{ tool.short_description }}</p>
                   <div class="content-footer">
                     <span class="view-label">View</span>
-                    <i class="fa-solid fa-angle-right"></i>
+                    <i class="fa-solid fa-angle-right" />
                   </div>
                 </div>
               </a>
@@ -294,7 +298,7 @@ export default {
         if (event.keyCode === 13) {
           x.click();
         }
-      })
+      });
     });
 
     this.setPerPage();
