@@ -73,10 +73,7 @@
             :class="{'is-active' : showTopics}"
             @click="toggleTopics"
           >
-            <div
-              tabindex="0"
-              class="h4 accordion-title"
-            >
+            <div class="h4 accordion-title">
               Filter by topic
             </div>
           </div>
