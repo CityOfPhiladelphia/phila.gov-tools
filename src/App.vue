@@ -53,6 +53,7 @@
           type="submit"
           class="search-submit"
           value="Search"
+          tabindex="-1"
         >
         <button
           v-if="search.length > 0"
