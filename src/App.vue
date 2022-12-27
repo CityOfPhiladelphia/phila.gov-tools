@@ -342,6 +342,16 @@ export default {
         let iTool = this.tools.filter(tool => tool.priority_fixed_value == i)[0];
         this.featuredTools.push(iTool);
       }
+
+      this.featuredTools.sort(function(a, b) {
+        if (a.title.toLowerCase() < b.title.toLowerCase()) {
+          return -1;
+        }
+        if (a.title.toLowerCase() > b.title.toLowerCase()) {
+          return 1;
+        }
+        return 0;
+      });
     },
     async getAllTools() {
       await axios
@@ -355,19 +365,19 @@ export default {
             this.filteredTools.push(record.fields);
           }
           this.tools.sort(function(a, b) {
-            if (a.title < b.title) {
+            if (a.title.toLowerCase() < b.title.toLowerCase()) {
               return -1;
             }
-            if (a.title > b.title) {
+            if (a.title.toLowerCase() > b.title.toLowerCase()) {
               return 1;
             }
             return 0;
           });
           this.filteredTools.sort(function(a, b) {
-            if (a.title < b.title) {
+            if (a.title.toLowerCase() < b.title.toLowerCase()) {
               return -1;
             }
-            if (a.title > b.title) {
+            if (a.title.toLowerCase() > b.title.toLowerCase()) {
               return 1;
             }
             return 0;
