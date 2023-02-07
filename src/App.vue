@@ -251,6 +251,9 @@ export default {
     };
   },
   computed: {
+    currentRouteName() {
+      return this.isTranslated(this.$route.path) ? this.$route.path : null;
+    },
   },
 
   watch: {
@@ -306,6 +309,14 @@ export default {
   },
 
   methods: {
+    isTranslated(path) {
+      let langList = [ '/zh', '/es','/ar', '/fr', '/ru', '/ms', '/hi', '/pt', '/bn', '/id', '/sw', '/ja', '/de', '/ko', '/it', '/fa', '/tr', '/nl', '/te', '/vi', '/ht' ];
+      return (langList.indexOf(path) > -1);
+    },
+    translateLink(link) {
+      let self = this;
+      return self.currentRouteName ? link.replace('www.phila.gov', 'www.phila.gov'+self.currentRouteName) : link;
+    },
     setPerPage() {
       if (window.innerWidth < 1050) {
         this.perPage = 8;
@@ -361,6 +372,7 @@ export default {
           }})
         .then(response => {
           for (let record of response.data.records) {
+            record.fields.link = this.translateLink(record.fields.link),
             this.tools.push(record.fields);
             this.filteredTools.push(record.fields);
           }

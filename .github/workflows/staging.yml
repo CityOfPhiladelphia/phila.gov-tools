@@ -1,8 +1,8 @@
-name: Deploy to dev
+name: Deploy to staging
 on:
   push:
     branches:
-      - frontend-updates
+      - staging
 jobs:
   build:
     name: Build files
