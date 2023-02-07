@@ -252,6 +252,7 @@ export default {
   },
   computed: {
     currentRouteName() {
+      console.log(window.location.pathname);
       return this.isTranslated(this.$route.path) ? this.$route.path : null;
     },
   },
