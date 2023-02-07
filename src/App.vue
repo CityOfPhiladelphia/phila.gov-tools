@@ -252,8 +252,7 @@ export default {
   },
   computed: {
     currentRouteName() {
-      console.log(window.location.pathname);
-      return this.isTranslated(this.$route.path) ? this.$route.path : null;
+      return this.isTranslated(window.location.pathname);
     },
   },
 
@@ -311,8 +310,14 @@ export default {
 
   methods: {
     isTranslated(path) {
-      let langList = [ '/zh', '/es','/ar', '/fr', '/ru', '/ms', '/hi', '/pt', '/bn', '/id', '/sw', '/ja', '/de', '/ko', '/it', '/fa', '/tr', '/nl', '/te', '/vi', '/ht' ];
-      return (langList.indexOf(path) > -1);
+      let splitPath = path.split("/");
+      const langList = [ 'zh', 'es','ar', 'fr', 'ru', 'ms', 'hi', 'pt', 'bn', 'id', 'sw', 'ja', 'de', 'ko', 'it', 'fa', 'tr', 'nl', 'te', 'vi', 'ht' ];
+      for (let i = 0; i < splitPath.length; i++) {
+        if (langList.indexOf(splitPath[i]) > -1) {
+          return '/'+splitPath[i];
+        }
+      }
+      return null;
     },
     translateLink(link) {
       let self = this;
