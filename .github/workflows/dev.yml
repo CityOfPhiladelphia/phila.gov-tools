@@ -20,6 +20,7 @@ jobs:
           npm run build
         env:
           FONTAWESOME_NPM_AUTH_TOKEN: ${{ secrets.FA_AUTH_TOKEN }}
+          VUE_APP_AIRTABLE_ACCESS_TOKEN: ${{ secrets.VUE_APP_AIRTABLE_ACCESS_TOKEN }}
 
       - name: Deploy to s3
         env:
