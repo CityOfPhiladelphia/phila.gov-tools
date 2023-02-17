@@ -2,7 +2,7 @@ name: Deploy to dev
 on:
   push:
     branches:
-      - frontend-updates
+      - airtable-update
 jobs:
   build:
     name: Build files
