@@ -209,8 +209,8 @@ import VuePaginate from "vue-paginate";
 Vue.use(VueFuse);
 Vue.use(VuePaginate);
 
-const toolsEndpoint = 'https://api.airtable.com/v0/appPVX1yJCVtJhklp/tools?api_key=keyZ84hQSumaKJOhi';
-const topicsEndpoint = 'https://api.airtable.com/v0/appPVX1yJCVtJhklp/topics?api_key=keyZ84hQSumaKJOhi';
+const toolsEndpoint = 'https://api.airtable.com/v0/appPVX1yJCVtJhklp/tools';
+const topicsEndpoint = 'https://api.airtable.com/v0/appPVX1yJCVtJhklp/topics';
 
 import { format } from 'date-fns';
 
@@ -358,7 +358,11 @@ export default {
         .get( toolsEndpoint , {
           params: {
             'count': -1,
-          }})
+          },
+          headers: {
+            'Authorization': 'Bearer ' + process.env.VUE_APP_AIRTABLE_ACCESS_TOKEN,
+          }
+        })
         .then(response => {
           for (let record of response.data.records) {
             this.tools.push(record.fields);
@@ -394,7 +398,11 @@ export default {
         .get( topicsEndpoint , {
           params: {
             'count': -1,
-          }})
+          },
+          headers: {
+            'Authorization': 'Bearer ' + process.env.VUE_APP_AIRTABLE_ACCESS_TOKEN,
+          }
+        })
         .then(response => {
           for (let record of response.data.records) {
             this.topics.push(record.fields);
