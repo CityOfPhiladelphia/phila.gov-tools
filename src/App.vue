@@ -358,7 +358,6 @@ export default {
         .get( toolsEndpoint , {
           params: {
             'count': -1,
-            // 'Authorization': 'Bearer ' + process.env.VUE_APP_AIRTABLE_ACCESS_TOKEN,
           },
           headers: {
             'Authorization': 'Bearer ' + process.env.VUE_APP_AIRTABLE_ACCESS_TOKEN,
@@ -399,7 +398,6 @@ export default {
         .get( topicsEndpoint , {
           params: {
             'count': -1,
-            // 'Authorization': 'Bearer ' + process.env.VUE_APP_AIRTABLE_ACCESS_TOKEN,
           },
           headers: {
             'Authorization': 'Bearer ' + process.env.VUE_APP_AIRTABLE_ACCESS_TOKEN,
