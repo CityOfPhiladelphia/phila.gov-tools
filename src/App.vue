@@ -377,9 +377,9 @@ export default {
           // params: {
           //   'count': -1,
           // },
-          // headers: {
-          //   'Authorization': 'Bearer ' + process.env.VUE_APP_AIRTABLE_ACCESS_TOKEN,
-          // },
+          headers: {
+            'Authorization': 'Bearer ' + process.env.VUE_APP_AIRTABLE_ACCESS_TOKEN,
+          },
         })
         .then(response => {
           for (let record of response.data.records) {
@@ -417,9 +417,9 @@ export default {
           // params: {
           //   'count': -1,
           // },
-          // headers: {
-          //   'Authorization': 'Bearer ' + process.env.VUE_APP_AIRTABLE_ACCESS_TOKEN,
-          // },
+          headers: {
+            'Authorization': 'Bearer ' + process.env.VUE_APP_AIRTABLE_ACCESS_TOKEN,
+          },
         })
         .then(response => {
           for (let record of response.data.records) {
