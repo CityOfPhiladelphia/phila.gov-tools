@@ -209,8 +209,8 @@ import VuePaginate from "vue-paginate";
 Vue.use(VueFuse);
 Vue.use(VuePaginate);
 
-const toolsEndpoint = 'https://api.airtable.com/v0/appPVX1yJCVtJhklp/tools';
-const topicsEndpoint = 'https://api.airtable.com/v0/appPVX1yJCVtJhklp/topics';
+const defaultToolsEndpoint = 'https://api.airtable.com/v0/appPVX1yJCVtJhklp/tools?count=-1';
+const defaultTopicsEndpoint = 'https://api.airtable.com/v0/appPVX1yJCVtJhklp/topics?count=-1';
 
 import { format } from 'date-fns';
 
@@ -251,6 +251,24 @@ export default {
     };
   },
   computed: {
+    toolsEndpoint() {
+      let language = this.isTranslated(window.location.pathname);
+      if (language == '/es') {
+        return 'https://translated-endpoints-json.s3.amazonaws.com/es/tools.json';
+      } else if (language == '/zh') {
+        return 'https://translated-endpoints-json.s3.amazonaws.com/zh/tools.json';
+      }
+      return defaultToolsEndpoint;
+    },
+    topicsEndpoint() {
+      let language = this.isTranslated(window.location.pathname);
+      if (language == '/es') {
+        return 'https://translated-endpoints-json.s3.amazonaws.com/es/topics.json';
+      } else if (language == '/zh') {
+        return 'https://translated-endpoints-json.s3.amazonaws.com/zh/topics.json';
+      }
+      return defaultTopicsEndpoint;
+    },
   },
 
   watch: {
@@ -355,13 +373,13 @@ export default {
     },
     async getAllTools() {
       await axios
-        .get( toolsEndpoint , {
-          params: {
-            'count': -1,
-          },
-          headers: {
-            'Authorization': 'Bearer ' + process.env.VUE_APP_AIRTABLE_ACCESS_TOKEN,
-          }
+        .get( this.toolsEndpoint , {
+          // params: {
+          //   'count': -1,
+          // },
+          // headers: {
+          //   'Authorization': 'Bearer ' + process.env.VUE_APP_AIRTABLE_ACCESS_TOKEN,
+          // },
         })
         .then(response => {
           for (let record of response.data.records) {
@@ -395,13 +413,13 @@ export default {
     },
     getAllTopics: function () {
       axios
-        .get( topicsEndpoint , {
-          params: {
-            'count': -1,
-          },
-          headers: {
-            'Authorization': 'Bearer ' + process.env.VUE_APP_AIRTABLE_ACCESS_TOKEN,
-          }
+        .get( this.topicsEndpoint , {
+          // params: {
+          //   'count': -1,
+          // },
+          // headers: {
+          //   'Authorization': 'Bearer ' + process.env.VUE_APP_AIRTABLE_ACCESS_TOKEN,
+          // },
         })
         .then(response => {
           for (let record of response.data.records) {
@@ -537,6 +555,17 @@ export default {
       this.checkedTopics = [];
       this.search = '';
       this.page = 1;
+    },
+
+    isTranslated(path) {
+      let splitPath = path.split("/");
+      const langList = [ 'zh', 'es','ar', 'fr', 'ru', 'ms', 'hi', 'pt', 'bn', 'id', 'sw', 'ja', 'de', 'ko', 'it', 'fa', 'tr', 'nl', 'te', 'vi', 'ht' ];
+      for (let i = 0; i < splitPath.length; i++) {
+        if (langList.indexOf(splitPath[i]) > -1) {
+          return '/'+splitPath[i];
+        }
+      }
+      return null;
     },
   },
 };
