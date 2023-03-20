@@ -372,15 +372,20 @@ export default {
       });
     },
     async getAllTools() {
-      await axios
-        .get( this.toolsEndpoint , {
-          // params: {
-          //   'count': -1,
-          // },
+      var config = {};
+      let language = this.isTranslated(window.location.pathname);
+      if (language == '/es' || language == '/zh') {
+        config = {};
+      }else {
+        config = {
           headers: {
             'Authorization': 'Bearer ' + process.env.VUE_APP_AIRTABLE_ACCESS_TOKEN,
           },
-        })
+        };
+      }
+
+      await axios
+        .get( this.toolsEndpoint , config )
         .then(response => {
           for (let record of response.data.records) {
             this.tools.push(record.fields);
@@ -412,15 +417,20 @@ export default {
         });
     },
     getAllTopics: function () {
-      axios
-        .get( this.topicsEndpoint , {
-          // params: {
-          //   'count': -1,
-          // },
+      var config = {};
+      let language = this.isTranslated(window.location.pathname);
+      if (language == '/es' || language == '/zh') {
+        config = {};
+      }else {
+        config = {
           headers: {
             'Authorization': 'Bearer ' + process.env.VUE_APP_AIRTABLE_ACCESS_TOKEN,
           },
-        })
+        };
+      }
+
+      axios
+        .get( this.topicsEndpoint , config )
         .then(response => {
           for (let record of response.data.records) {
             this.topics.push(record.fields);
