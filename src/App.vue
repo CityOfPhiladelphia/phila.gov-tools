@@ -46,7 +46,7 @@
           title="search-bar"
           class="search-field"
           type="text"
-          placeholder="Search by title or keyword"
+          :placeholder='$t("Search by title or keyword")'
         >
         <input
           ref="archive-search-bar"
