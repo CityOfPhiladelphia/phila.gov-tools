@@ -108,7 +108,7 @@
             class="clear-button"
             @click="clearAllFilters()"
           >
-            Clear all Filters
+            {{ $t('Clear all filters') }}
           </button>
         </div>
       </div>
