@@ -4,7 +4,7 @@
     class="phila-ui-skin"
   >
     <div class="add-margins-top">
-      <h2>Featured tools</h2>
+      <h2>{{ $t('Featured tools') }}</h2>
     </div>
 
     <div class="grid-x">
@@ -19,11 +19,11 @@
         >
           <div class="content-block">
             <i class="fa-regular fa-thumbtack" />
-            <span class="featured-label">FEATURED</span>
+            <span class="featured-label">{{ $t('Featured') }}</span>
             <h3>{{ tool.title }}</h3>
             <p>{{ tool.short_description }}</p>
             <div class="content-footer">
-              <span class="view-label">View</span>
+              <span class="view-label">{{ $t('View') }}</span>
               <i class="fa-solid fa-angle-right" />
             </div>
           </div>
@@ -35,7 +35,7 @@
       id="search-bar-label" 
       class="add-margins-top"
     >
-      <h2>Browse tools</h2>
+      <h2>{{ $t('Browse tools') }}</h2>
     </div>
 
     <div class="add-margins-search">    
@@ -74,7 +74,7 @@
             @click="toggleTopics"
           >
             <div class="h4 accordion-title">
-              Filter by topic
+              {{ $t('Filter topics') }}
             </div>
           </div>
           <div
@@ -159,7 +159,7 @@
                   <h3>{{ tool.title }}</h3>
                   <p>{{ tool.short_description }}</p>
                   <div class="content-footer">
-                    <span class="view-label">View</span>
+                    <span class="view-label">{{ $t('View') }}</span>
                     <i class="fa-solid fa-angle-right" />
                   </div>
                 </div>
@@ -172,7 +172,7 @@
               v-show="!loading && !emptyResponse && !failure"
               class="tool-length"
             >
-              Showing <b> {{ filteredTools.length }} </b> tools.
+              {{ $t('Showing') }} <b> {{ filteredTools.length }} </b> {{ $t('Tools') }}.
             </div>
 
             <paginate-links
@@ -183,8 +183,8 @@
               :show-step-links="true"
               :hide-single-page="true"
               :step-links="{
-                next: 'Next',
-                prev: 'Previous'
+                next: $t('Next'),
+                prev: $t('Previous'),
               }"
               :classes="{
                 '.number': ['number', 'tabbable'],
@@ -205,6 +205,7 @@ import Vue from "vue";
 import axios from "axios";
 import VueFuse from "vue-fuse";
 import VuePaginate from "vue-paginate";
+import { loadLanguageAsync } from './i18n.js';
 
 Vue.use(VueFuse);
 Vue.use(VuePaginate);
@@ -251,20 +252,28 @@ export default {
     };
   },
   computed: {
+    language() {
+      let lang = this.isTranslated(window.location.pathname);
+      if (lang =='/es') {
+        return 'es';
+      } else if (lang =='/zh') {
+        return 'zh';
+      }
+      return 'en';
+    },
+     
     toolsEndpoint() {
-      let language = this.isTranslated(window.location.pathname);
-      if (language == '/es') {
+      if (this.language == 'es') {
         return 'https://translated-endpoints-json.s3.amazonaws.com/es/tools.json';
-      } else if (language == '/zh') {
+      } else if (this.language == 'zh') {
         return 'https://translated-endpoints-json.s3.amazonaws.com/zh/tools.json';
       }
       return defaultToolsEndpoint;
     },
     topicsEndpoint() {
-      let language = this.isTranslated(window.location.pathname);
-      if (language == '/es') {
+      if (this.language == 'es') {
         return 'https://translated-endpoints-json.s3.amazonaws.com/es/topics.json';
-      } else if (language == '/zh') {
+      } else if (this.language == 'zh') {
         return 'https://translated-endpoints-json.s3.amazonaws.com/zh/topics.json';
       }
       return defaultTopicsEndpoint;
@@ -307,6 +316,7 @@ export default {
     this.getAllTopics();
     await this.getAllTools();
     this.getFeaturedTools();
+    loadLanguageAsync(this.language);
 
     document.querySelectorAll('.tabbable a').forEach(x => {
       x.tabIndex = 0;
@@ -373,8 +383,8 @@ export default {
     },
     async getAllTools() {
       var config = {};
-      let language = this.isTranslated(window.location.pathname);
-      if (language == '/es' || language == '/zh') {
+      let langSlug = this.isTranslated(window.location.pathname);
+      if (langSlug == '/es' || langSlug == '/zh') {
         config = {};
       }else {
         config = {
@@ -418,8 +428,8 @@ export default {
     },
     getAllTopics: function () {
       var config = {};
-      let language = this.isTranslated(window.location.pathname);
-      if (language == '/es' || language == '/zh') {
+      let langSlug = this.isTranslated(window.location.pathname);
+      if (langSlug == '/es' || langSlug == '/zh') {
         config = {};
       }else {
         config = {
