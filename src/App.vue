@@ -612,6 +612,7 @@ export default {
 
   a.card.featured-card {
     border-bottom: 5px solid #0F4D90;
+    width: -webkit-fill-available;
   }
 
   a.card.app-card {
