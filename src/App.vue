@@ -92,7 +92,7 @@
                   v-model="checkedTopics"
                   type="checkbox"
                   class="hidden-checkbox"
-                  :value="value.slug"
+                  :value="value.key"
                   :name="value.slug"
                   @click="filterResults"
                 >
@@ -443,6 +443,7 @@ export default {
         .get( this.topicsEndpoint , config )
         .then(response => {
           for (let record of response.data.records) {
+            record.fields.key = record.fields.name.trim().toLowerCase();
             this.topics.push(record.fields);
           }
           this.topics.sort(function(a, b) {
