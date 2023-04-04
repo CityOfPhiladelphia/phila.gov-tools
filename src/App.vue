@@ -4,7 +4,7 @@
     class="phila-ui-skin"
   >
     <div class="add-margins-top">
-      <h2>Featured tools</h2>
+      <h2>{{ $t('Featured tools') }}</h2>
     </div>
 
     <div class="grid-x">
@@ -19,11 +19,11 @@
         >
           <div class="content-block">
             <i class="fa-regular fa-thumbtack" />
-            <span class="featured-label">FEATURED</span>
+            <span class="featured-label">{{ $t('Featured') }}</span>
             <h3>{{ tool.title }}</h3>
             <p>{{ tool.short_description }}</p>
             <div class="content-footer">
-              <span class="view-label">View</span>
+              <span class="view-label">{{ $t('View') }}</span>
               <i class="fa-solid fa-angle-right" />
             </div>
           </div>
@@ -35,7 +35,7 @@
       id="search-bar-label" 
       class="add-margins-top"
     >
-      <h2>Browse tools</h2>
+      <h2>{{ $t('Browse tools') }}</h2>
     </div>
 
     <div class="add-margins-search">    
@@ -46,7 +46,7 @@
           title="search-bar"
           class="search-field"
           type="text"
-          placeholder="Search by title or keyword"
+          :placeholder='$t("Search by title or keyword")'
         >
         <input
           ref="archive-search-bar"
@@ -74,7 +74,7 @@
             @click="toggleTopics"
           >
             <div class="h4 accordion-title">
-              Filter by topic
+              {{ $t('Filter topics') }}
             </div>
           </div>
           <div
@@ -92,7 +92,7 @@
                   v-model="checkedTopics"
                   type="checkbox"
                   class="hidden-checkbox"
-                  :value="value.slug"
+                  :value="value.key"
                   :name="value.slug"
                   @click="filterResults"
                 >
@@ -108,7 +108,7 @@
             class="clear-button"
             @click="clearAllFilters()"
           >
-            Clear all Filters
+            {{ $t('Clear all filters') }}
           </button>
         </div>
       </div>
@@ -159,7 +159,7 @@
                   <h3>{{ tool.title }}</h3>
                   <p>{{ tool.short_description }}</p>
                   <div class="content-footer">
-                    <span class="view-label">View</span>
+                    <span class="view-label">{{ $t('View') }}</span>
                     <i class="fa-solid fa-angle-right" />
                   </div>
                 </div>
@@ -172,7 +172,7 @@
               v-show="!loading && !emptyResponse && !failure"
               class="tool-length"
             >
-              Showing <b> {{ filteredTools.length }} </b> tools.
+              {{ $t('Showing') }} <b> {{ filteredTools.length }} </b> {{ $t('Tools') }}.
             </div>
 
             <paginate-links
@@ -183,8 +183,8 @@
               :show-step-links="true"
               :hide-single-page="true"
               :step-links="{
-                next: 'Next',
-                prev: 'Previous'
+                next: $t('Next'),
+                prev: $t('Previous'),
               }"
               :classes="{
                 '.number': ['number', 'tabbable'],
@@ -205,12 +205,13 @@ import Vue from "vue";
 import axios from "axios";
 import VueFuse from "vue-fuse";
 import VuePaginate from "vue-paginate";
+import { loadLanguageAsync } from './i18n.js';
 
 Vue.use(VueFuse);
 Vue.use(VuePaginate);
 
-const toolsEndpoint = 'https://api.airtable.com/v0/appPVX1yJCVtJhklp/tools';
-const topicsEndpoint = 'https://api.airtable.com/v0/appPVX1yJCVtJhklp/topics';
+const defaultToolsEndpoint = 'https://api.airtable.com/v0/appPVX1yJCVtJhklp/tools?count=-1';
+const defaultTopicsEndpoint = 'https://api.airtable.com/v0/appPVX1yJCVtJhklp/topics?count=-1';
 
 import { format } from 'date-fns';
 
@@ -251,6 +252,32 @@ export default {
     };
   },
   computed: {
+    language() {
+      let lang = this.isTranslated(window.location.pathname);
+      if (lang =='/es') {
+        return 'es';
+      } else if (lang =='/zh') {
+        return 'zh';
+      }
+      return 'en';
+    },
+     
+    toolsEndpoint() {
+      if (this.language == 'es') {
+        return 'https://translated-endpoints-json.s3.amazonaws.com/es/tools.json';
+      } else if (this.language == 'zh') {
+        return 'https://translated-endpoints-json.s3.amazonaws.com/zh/tools.json';
+      }
+      return defaultToolsEndpoint;
+    },
+    topicsEndpoint() {
+      if (this.language == 'es') {
+        return 'https://translated-endpoints-json.s3.amazonaws.com/es/topics.json';
+      } else if (this.language == 'zh') {
+        return 'https://translated-endpoints-json.s3.amazonaws.com/zh/topics.json';
+      }
+      return defaultTopicsEndpoint;
+    },
   },
 
   watch: {
@@ -289,6 +316,7 @@ export default {
     this.getAllTopics();
     await this.getAllTools();
     this.getFeaturedTools();
+    loadLanguageAsync(this.language);
 
     document.querySelectorAll('.tabbable a').forEach(x => {
       x.tabIndex = 0;
@@ -354,15 +382,20 @@ export default {
       });
     },
     async getAllTools() {
-      await axios
-        .get( toolsEndpoint , {
-          params: {
-            'count': -1,
-          },
+      var config = {};
+      let langSlug = this.isTranslated(window.location.pathname);
+      if (langSlug == '/es' || langSlug == '/zh') {
+        config = {};
+      }else {
+        config = {
           headers: {
             'Authorization': 'Bearer ' + process.env.VUE_APP_AIRTABLE_ACCESS_TOKEN,
-          }
-        })
+          },
+        };
+      }
+
+      await axios
+        .get( this.toolsEndpoint , config )
         .then(response => {
           for (let record of response.data.records) {
             this.tools.push(record.fields);
@@ -394,17 +427,23 @@ export default {
         });
     },
     getAllTopics: function () {
-      axios
-        .get( topicsEndpoint , {
-          params: {
-            'count': -1,
-          },
+      var config = {};
+      let langSlug = this.isTranslated(window.location.pathname);
+      if (langSlug == '/es' || langSlug == '/zh') {
+        config = {};
+      }else {
+        config = {
           headers: {
             'Authorization': 'Bearer ' + process.env.VUE_APP_AIRTABLE_ACCESS_TOKEN,
-          }
-        })
+          },
+        };
+      }
+
+      axios
+        .get( this.topicsEndpoint , config )
         .then(response => {
           for (let record of response.data.records) {
+            record.fields.key = record.fields.name.trim().toLowerCase();
             this.topics.push(record.fields);
           }
           this.topics.sort(function(a, b) {
@@ -538,6 +577,17 @@ export default {
       this.search = '';
       this.page = 1;
     },
+
+    isTranslated(path) {
+      let splitPath = path.split("/");
+      const langList = [ 'zh', 'es','ar', 'fr', 'ru', 'ms', 'hi', 'pt', 'bn', 'id', 'sw', 'ja', 'de', 'ko', 'it', 'fa', 'tr', 'nl', 'te', 'vi', 'ht' ];
+      for (let i = 0; i < splitPath.length; i++) {
+        if (langList.indexOf(splitPath[i]) > -1) {
+          return '/'+splitPath[i];
+        }
+      }
+      return null;
+    },
   },
 };
 </script>
@@ -563,6 +613,7 @@ export default {
 
   a.card.featured-card {
     border-bottom: 5px solid #0F4D90;
+    width: -webkit-fill-available;
   }
 
   a.card.app-card {
