@@ -62,4 +62,18 @@ const languages = {
     "Previous":"以前",
     "Next": "下一步",
   },
+  'ar': {
+    "Featured tools": "أدوات مميزة",
+    "Featured":"متميز",
+    "View":"عرض",
+    "Browse tools":"أدوات التصفح",
+    "Search by title or keyword":"البحث حسب العنوان أو الكلمة الرئيسية",
+    "Filter topics": "الفلترة حسب الموضوع",
+    "Clear all filters":"مسح جميع الفلاتر",
+    "Showing":"عرض",
+    "Tools":"أدوات",
+    "Previous":"السابق",
+    "Next": "التالي",
+  },
+  
 };
