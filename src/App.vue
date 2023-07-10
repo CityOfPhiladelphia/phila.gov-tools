@@ -258,6 +258,8 @@ export default {
         return 'es';
       } else if (lang =='/zh') {
         return 'zh';
+      } else if (lang =='/ar') {
+        return 'ar';
       }
       return 'en';
     },
@@ -267,6 +269,8 @@ export default {
         return 'https://translated-endpoints-json.s3.amazonaws.com/es/tools.json';
       } else if (this.language == 'zh') {
         return 'https://translated-endpoints-json.s3.amazonaws.com/zh/tools.json';
+      } else if (this.language == 'ar') {
+        return 'https://translated-endpoints-json.s3.amazonaws.com/ar/tools.json';
       }
       return defaultToolsEndpoint;
     },
@@ -275,7 +279,9 @@ export default {
         return 'https://translated-endpoints-json.s3.amazonaws.com/es/topics.json';
       } else if (this.language == 'zh') {
         return 'https://translated-endpoints-json.s3.amazonaws.com/zh/topics.json';
-      }
+      } else if (this.language == 'ar') {
+        return 'https://translated-endpoints-json.s3.amazonaws.com/ar/topics.json';
+      } 
       return defaultTopicsEndpoint;
     },
   },
@@ -384,7 +390,7 @@ export default {
     async getAllTools() {
       var config = {};
       let langSlug = this.isTranslated(window.location.pathname);
-      if (langSlug == '/es' || langSlug == '/zh') {
+      if (langSlug == '/es' || langSlug == '/zh'  || langSlug == '/ar') {
         config = {};
       }else {
         config = {
@@ -429,7 +435,7 @@ export default {
     getAllTopics: function () {
       var config = {};
       let langSlug = this.isTranslated(window.location.pathname);
-      if (langSlug == '/es' || langSlug == '/zh') {
+      if (langSlug == '/es' || langSlug == '/zh'  || langSlug == '/ar') {
         config = {};
       }else {
         config = {
