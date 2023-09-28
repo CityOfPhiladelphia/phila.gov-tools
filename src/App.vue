@@ -401,7 +401,8 @@ export default {
     async getAllTools() {
       var config = {};
       let langSlug = this.isTranslated(window.location.pathname);
-      if (langSlug == '/es' || langSlug == '/zh'  || langSlug == '/ar') {
+      const validLanguages = [ '/es', '/zh', '/ar', '/ht', '/fr', '/sw', '/pt', '/ru', '/vi' ];
+      if (validLanguages.includes(langSlug)) {
         config = {};
       }else {
         config = {
@@ -446,7 +447,8 @@ export default {
     getAllTopics: function () {
       var config = {};
       let langSlug = this.isTranslated(window.location.pathname);
-      if (langSlug == '/es' || langSlug == '/zh'  || langSlug == '/ar') {
+      const validLanguages = [ '/es', '/zh', '/ar', '/ht', '/fr', '/sw', '/pt', '/ru', '/vi' ];
+      if (validLanguages.includes(langSlug)) {
         config = {};
       }else {
         config = {
