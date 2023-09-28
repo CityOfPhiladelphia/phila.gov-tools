@@ -254,34 +254,45 @@ export default {
   computed: {
     language() {
       let lang = this.isTranslated(window.location.pathname);
-      if (lang =='/es') {
-        return 'es';
-      } else if (lang =='/zh') {
-        return 'zh';
-      } else if (lang =='/ar') {
-        return 'ar';
-      }
-      return 'en';
+      const validLanguages = [ '/es', '/zh', '/ar', '/ht', '/fr', '/sw', '/pt', '/ru', '/vi' ];
+      if (validLanguages.includes(lang)) {
+        return lang.substring(1); 
+      } 
+      return 'en'; 
     },
      
     toolsEndpoint() {
-      if (this.language == 'es') {
-        return 'https://translated-endpoints-json.s3.amazonaws.com/es/tools.json';
-      } else if (this.language == 'zh') {
-        return 'https://translated-endpoints-json.s3.amazonaws.com/zh/tools.json';
-      } else if (this.language == 'ar') {
-        return 'https://translated-endpoints-json.s3.amazonaws.com/ar/tools.json';
-      }
+      const toolsUrls = {
+        'es': 'https://translated-endpoints-json-staging.s3.amazonaws.com/es/tools.json',
+        'zh': 'https://translated-endpoints-json-staging.s3.amazonaws.com/zh/tools.json',
+        'ar': 'https://translated-endpoints-json-staging.s3.amazonaws.com/ar/tools.json',
+        'ht': 'https://translated-endpoints-json-staging.s3.amazonaws.com/ht/tools.json',
+        'fr': 'https://translated-endpoints-json-staging.s3.amazonaws.com/fr/tools.json',
+        'sw': 'https://translated-endpoints-json-staging.s3.amazonaws.com/sw/tools.json',
+        'pt': 'https://translated-endpoints-json-staging.s3.amazonaws.com/pt/tools.json',
+        'ru': 'https://translated-endpoints-json-staging.s3.amazonaws.com/ru/tools.json',
+        'vi': 'https://translated-endpoints-json-staging.s3.amazonaws.com/vi/tools.json',
+      };
+      if (toolsUrls[this.language]) {
+        return toolsUrls[this.language];
+      } 
       return defaultToolsEndpoint;
     },
     topicsEndpoint() {
-      if (this.language == 'es') {
-        return 'https://translated-endpoints-json.s3.amazonaws.com/es/topics.json';
-      } else if (this.language == 'zh') {
-        return 'https://translated-endpoints-json.s3.amazonaws.com/zh/topics.json';
-      } else if (this.language == 'ar') {
-        return 'https://translated-endpoints-json.s3.amazonaws.com/ar/topics.json';
-      } 
+      const topicsUrls = {
+        'es': 'https://translated-endpoints-json-staging.s3.amazonaws.com/es/topics.json',
+        'zh': 'https://translated-endpoints-json-staging.s3.amazonaws.com/zh/topics.json',
+        'ar': 'https://translated-endpoints-json-staging.s3.amazonaws.com/ar/topics.json',
+        'ht': 'https://translated-endpoints-json-staging.s3.amazonaws.com/ht/topics.json',
+        'fr': 'https://translated-endpoints-json-staging.s3.amazonaws.com/fr/topics.json',
+        'sw': 'https://translated-endpoints-json-staging.s3.amazonaws.com/sw/topics.json',
+        'pt': 'https://translated-endpoints-json-staging.s3.amazonaws.com/pt/topics.json',
+        'ru': 'https://translated-endpoints-json-staging.s3.amazonaws.com/ru/topics.json',
+        'vi': 'https://translated-endpoints-json-staging.s3.amazonaws.com/vi/topics.json',
+      };
+      if (topicsUrls[this.language]) {
+        return topicsUrls[this.language];
+      }
       return defaultTopicsEndpoint;
     },
   },
@@ -390,7 +401,8 @@ export default {
     async getAllTools() {
       var config = {};
       let langSlug = this.isTranslated(window.location.pathname);
-      if (langSlug == '/es' || langSlug == '/zh'  || langSlug == '/ar') {
+      const validLanguages = [ '/es', '/zh', '/ar', '/ht', '/fr', '/sw', '/pt', '/ru', '/vi' ];
+      if (validLanguages.includes(langSlug)) {
         config = {};
       }else {
         config = {
@@ -435,7 +447,8 @@ export default {
     getAllTopics: function () {
       var config = {};
       let langSlug = this.isTranslated(window.location.pathname);
-      if (langSlug == '/es' || langSlug == '/zh'  || langSlug == '/ar') {
+      const validLanguages = [ '/es', '/zh', '/ar', '/ht', '/fr', '/sw', '/pt', '/ru', '/vi' ];
+      if (validLanguages.includes(langSlug)) {
         config = {};
       }else {
         config = {
