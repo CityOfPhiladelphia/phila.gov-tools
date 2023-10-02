@@ -263,15 +263,15 @@ export default {
      
     toolsEndpoint() {
       const toolsUrls = {
-        'es': 'https://translated-endpoints-json-staging.s3.amazonaws.com/es/tools.json',
-        'zh': 'https://translated-endpoints-json-staging.s3.amazonaws.com/zh/tools.json',
-        'ar': 'https://translated-endpoints-json-staging.s3.amazonaws.com/ar/tools.json',
-        'ht': 'https://translated-endpoints-json-staging.s3.amazonaws.com/ht/tools.json',
-        'fr': 'https://translated-endpoints-json-staging.s3.amazonaws.com/fr/tools.json',
-        'sw': 'https://translated-endpoints-json-staging.s3.amazonaws.com/sw/tools.json',
-        'pt': 'https://translated-endpoints-json-staging.s3.amazonaws.com/pt/tools.json',
-        'ru': 'https://translated-endpoints-json-staging.s3.amazonaws.com/ru/tools.json',
-        'vi': 'https://translated-endpoints-json-staging.s3.amazonaws.com/vi/tools.json',
+        'es': 'https://translated-endpoints-json.s3.amazonaws.com/es/tools.json',
+        'zh': 'https://translated-endpoints-json.s3.amazonaws.com/zh/tools.json',
+        'ar': 'https://translated-endpoints-json.s3.amazonaws.com/ar/tools.json',
+        'ht': 'https://translated-endpoints-json.s3.amazonaws.com/ht/tools.json',
+        'fr': 'https://translated-endpoints-json.s3.amazonaws.com/fr/tools.json',
+        'sw': 'https://translated-endpoints-json.s3.amazonaws.com/sw/tools.json',
+        'pt': 'https://translated-endpoints-json.s3.amazonaws.com/pt/tools.json',
+        'ru': 'https://translated-endpoints-json.s3.amazonaws.com/ru/tools.json',
+        'vi': 'https://translated-endpoints-json.s3.amazonaws.com/vi/tools.json',
       };
       if (toolsUrls[this.language]) {
         return toolsUrls[this.language];
@@ -280,15 +280,15 @@ export default {
     },
     topicsEndpoint() {
       const topicsUrls = {
-        'es': 'https://translated-endpoints-json-staging.s3.amazonaws.com/es/topics.json',
-        'zh': 'https://translated-endpoints-json-staging.s3.amazonaws.com/zh/topics.json',
-        'ar': 'https://translated-endpoints-json-staging.s3.amazonaws.com/ar/topics.json',
-        'ht': 'https://translated-endpoints-json-staging.s3.amazonaws.com/ht/topics.json',
-        'fr': 'https://translated-endpoints-json-staging.s3.amazonaws.com/fr/topics.json',
-        'sw': 'https://translated-endpoints-json-staging.s3.amazonaws.com/sw/topics.json',
-        'pt': 'https://translated-endpoints-json-staging.s3.amazonaws.com/pt/topics.json',
-        'ru': 'https://translated-endpoints-json-staging.s3.amazonaws.com/ru/topics.json',
-        'vi': 'https://translated-endpoints-json-staging.s3.amazonaws.com/vi/topics.json',
+        'es': 'https://translated-endpoints-json.s3.amazonaws.com/es/topics.json',
+        'zh': 'https://translated-endpoints-json.s3.amazonaws.com/zh/topics.json',
+        'ar': 'https://translated-endpoints-json.s3.amazonaws.com/ar/topics.json',
+        'ht': 'https://translated-endpoints-json.s3.amazonaws.com/ht/topics.json',
+        'fr': 'https://translated-endpoints-json.s3.amazonaws.com/fr/topics.json',
+        'sw': 'https://translated-endpoints-json.s3.amazonaws.com/sw/topics.json',
+        'pt': 'https://translated-endpoints-json.s3.amazonaws.com/pt/topics.json',
+        'ru': 'https://translated-endpoints-json.s3.amazonaws.com/ru/topics.json',
+        'vi': 'https://translated-endpoints-json.s3.amazonaws.com/vi/topics.json',
       };
       if (topicsUrls[this.language]) {
         return topicsUrls[this.language];
