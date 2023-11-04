@@ -13,7 +13,7 @@ jobs:
         with:
             node-version: 16
             cache: 'npm'
-      - uses: actions/checkout@master
+      - uses: actions/checkout@staging
       - name: Build project files
         run: |
           printf "@fortawesome:registry=https://npm.fontawesome.com/\n//npm.fontawesome.com/:_authToken=${FONTAWESOME_NPM_AUTH_TOKEN}" >> ~/.npmrc
