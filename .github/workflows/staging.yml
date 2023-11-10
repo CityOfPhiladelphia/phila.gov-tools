@@ -1,22 +1,23 @@
-name: Deploy to dev
+name: Deploy to staging
 on:
   push:
     branches:
-      - production
+      - staging
 jobs:
   build:
     name: Build files
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@master
       - name: Setup node
         uses: actions/setup-node@v3
         with:
             node-version: 16
-      - uses: actions/checkout@master
+            cache: 'npm'
       - name: Build project files
         run: |
           printf "@fortawesome:registry=https://npm.fontawesome.com/\n//npm.fontawesome.com/:_authToken=${FONTAWESOME_NPM_AUTH_TOKEN}" >> ~/.npmrc
-          npm install
+          npm ci
           npm run build
         env:
           FONTAWESOME_NPM_AUTH_TOKEN: ${{ secrets.FA_AUTH_TOKEN }}
@@ -24,9 +25,9 @@ jobs:
 
       - name: Deploy to s3
         env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.PROD_AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.PROD_AWS_SECRET_ACCESS_KEY }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: us-east-1
-          AWS_S3_BUCKET: philagov-vue-apps/tools
+          AWS_S3_BUCKET: tools-app-dev
         run:
           aws s3 sync dist s3://$AWS_S3_BUCKET --region us-east-1 --delete
