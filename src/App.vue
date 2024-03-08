@@ -136,6 +136,39 @@
         </div>
 
         <div id="tiles">
+          <div class="filter-summary">
+            <span 
+              v-if="search.length > 0"
+              class="result-summary"
+            >
+              Showing {{ filteredTools.length }} results out of {{ tools.length }} in <b><em>Tools</em></b> for <b><em>"{{ search }}"</em></b>
+            </span>
+            <span v-if="checkedTopics.length > 0">
+              <span 
+                v-if="search.length == 0"
+                class="result-summary">
+                  Showing {{ filteredTools.length }} results out of {{ tools.length }} in <b><em>Tools</em></b>
+              </span>
+              <button
+                v-for="(item, index) in [...checkedTopics,]"
+                :key="index"
+                class="filter-button"
+                @click="removeFilter(item)"
+              >
+                {{ item }}
+                <i class="far fa-times" />
+              </button>
+            </span>
+            <span>
+              <input
+                v-if="checkedTopics.length > 0"
+                type="submit"
+                class="clear-search-button"
+                value="Clear all"
+                @click="clearAllFilters"
+              >
+            </span>
+          </div>
           <paginate
             v-if="filteredTools.length > 0 "
             id="tool-results"
@@ -168,13 +201,6 @@
           </paginate>
 
           <div class="card-pages">
-            <div
-              v-show="!loading && !emptyResponse && !failure"
-              class="tool-length"
-            >
-              {{ $t('Showing') }} <b> {{ filteredTools.length }} </b> {{ $t('Tools') }}.
-            </div>
-
             <paginate-links
               v-show="!loading && !emptyResponse && !failure"
               for="filteredTools"
@@ -462,6 +488,15 @@ export default {
         .catch(e => {})
         .finally(() => {});
     },
+
+    removeFilter(item) {
+      if (this.checkedTopics.includes(item)) {
+        this.checkedTopics = this.checkedTopics.filter(topic => topic !== item);
+      }
+      this.filterResults();
+      this.updateRouterQuery('checkedTopics', this.checkedTopics);
+    },
+    
     filterResults: async function () {
       await this.filterByTopic();
       await this.filterBySearch();
@@ -607,6 +642,36 @@ export default {
     border-bottom: 12px solid #2176d2;
   }
 
+  .filter-summary{
+      margin: 0px 0px 16px 16px;
+    }
+
+  .filter-button{
+    margin: 0px 8px 8px 0px;
+    padding: 4px;
+    border-radius: 4px;
+    background-color: #cfcfcf;
+    color: #333333;
+    line-height: normal;
+    text-transform: capitalize;
+    font-weight: normal;
+    cursor: pointer;
+  }
+
+  .result-summary {
+    margin-right: 8px;
+  }
+
+  .clear-search-button{
+    margin: 0px 8px 0px 8px;
+    border: none;
+    background-color: transparent;
+    color: #0f4d90;
+    cursor: pointer;
+    font-weight: 700;
+    text-decoration: underline;
+  }
+
   .clear-button {
     color: #ffffff;
     background-color: #0F4D90;
@@ -696,6 +761,7 @@ export default {
     margin-left: 1rem;
     margin-right: 1rem;
     display: flex;
+    float: right;
     justify-content: space-between;
   }
 
