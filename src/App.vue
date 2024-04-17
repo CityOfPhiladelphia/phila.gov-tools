@@ -3,40 +3,6 @@
     id="tools"
     class="phila-ui-skin"
   >
-    <div class="add-margins-top">
-      <h2>{{ $t('Featured tools') }}</h2>
-    </div>
-
-    <div class="grid-x">
-      <div
-        v-for="tool in featuredTools"
-        :key="tool.title"
-        class="medium-12 cell mbl card-wrap"
-      >
-        <a
-          class="card featured-card"
-          :href="tool.link"
-        >
-          <div class="content-block">
-            <i class="fa-regular fa-thumbtack" />
-            <span class="featured-label">{{ $t('Featured') }}</span>
-            <h3>{{ tool.title }}</h3>
-            <p>{{ tool.short_description }}</p>
-            <div class="content-footer">
-              <span class="view-label">{{ $t('View') }}</span>
-              <i class="fa-solid fa-angle-right" />
-            </div>
-          </div>
-        </a>
-      </div>
-    </div>
-
-    <div 
-      id="search-bar-label" 
-      class="add-margins-top"
-    >
-      <h2>{{ $t('Browse tools') }}</h2>
-    </div>
 
     <div class="add-margins-search">    
       <div class="search">
@@ -137,25 +103,27 @@
 
         <div id="tiles">
           <paginate
-            v-if="filteredTools.length > 0 "
+            v-if="allTools.length > 0 "
             id="tool-results"
             ref="paginator"
-            name="filteredTools"
-            :list="filteredTools"
+            name="allTools"
+            :list="allTools"
             class="grid-x paginate-list"
             tag="div"
             :per="perPage"
           >
             <div
-              v-for="tool in paginated('filteredTools')"
+              v-for="tool in paginated('allTools')"
               :key="tool.title"
-              class="medium-12 large-8 cell mbl card-wrap"
+              class="medium-12 large-12 cell mbl card-wrap"
             >
               <a
-                class="card app-card"
+                class="card"
                 :href="tool.link"
+                :class="{ 'featured-card': tool.isFeatured, 'app-card': !tool.isFeatured }"
               >
-                <div class="content-block">
+                <div class="content-block">      
+                  <i v-if="tool.isFeatured" class="fa-solid fa-thumbtack" />            
                   <h3>{{ tool.title }}</h3>
                   <p>{{ tool.short_description }}</p>
                   <div class="content-footer">
@@ -177,7 +145,7 @@
 
             <paginate-links
               v-show="!loading && !emptyResponse && !failure"
-              for="filteredTools"
+              for="allTools"
               :async="true"
               :limit="3"
               :show-step-links="true"
@@ -230,7 +198,7 @@ export default {
       featuredTools: [],
       search: '',
       routerQuery: {},
-      paginate: [ 'filteredTools' ],
+      paginate: [ 'allTools' ],
       topics: [],
       checkedTopics: [],
       page: 1,
@@ -252,6 +220,17 @@ export default {
     };
   },
   computed: {
+    allTools() {
+      let filteredToolsWithFeaturedFlag = this.filteredTools.map(filteredTool => ({
+        ...filteredTool,
+        isFeatured: false,
+      }));
+      let toolsWithFeaturedFlag = this.featuredTools.map(featuredTool => ({
+        ...featuredTool,
+        isFeatured: true,
+      }));
+      return [ ...toolsWithFeaturedFlag, ...filteredToolsWithFeaturedFlag ];
+    },
     language() {
       let lang = this.isTranslated(window.location.pathname);
       const validLanguages = [ '/es', '/zh', '/ar', '/ht', '/fr', '/sw', '/pt', '/ru', '/vi' ];
@@ -350,25 +329,24 @@ export default {
       for (let tool of this.tools) {
         if (tool.priority_seasonal_value && tool.priority_seasonal_value.includes(currentMonth)) {
           this.featuredTools.push(tool);
+          if (this.featuredTools.length === 3) {
+            return; 
+          }
         }
-      }
-
-      if (this.featuredTools.length > 3) {
-        return;
       }
 
       // new release priority
       for (let tool of this.tools) {
         if (tool.priority_new_release && tool.priority_new_release == 'Yes') {
           this.featuredTools.push(tool);
+          if (this.featuredTools.length === 3) {
+            return; 
+          }
         }
       }
 
-      // fixed priority
-      let fixedLength = 4-this.featuredTools.length;
-
-      for (let i=1; i<=fixedLength; i++) {
-        let iTool = this.tools.filter(tool => tool.priority_fixed_value == i)[0];
+      let iTool = this.tools.filter(tool => tool.priority_fixed_value === 1)[0];
+      if (iTool) {
         this.featuredTools.push(iTool);
       }
 
@@ -471,6 +449,7 @@ export default {
     filterByTopic: function() {
       if (this.checkedTopics.length !== 0 ){
         this.topicTools = [];
+        this.featuredTools = [];
         this.tools.forEach((tool) => {
           if (this.checkedTopics.includes(tool.category1) || this.checkedTopics.includes(tool.category2)) {
             if (!this.topicTools.includes(tool)) {
@@ -484,6 +463,7 @@ export default {
     },
 
     filterBySearch: function() {
+      this.featuredTools = [];
       if (this.search) {
         this.$search(this.search, this.topicTools, this.searchOptions).then(tools => {
           this.filteredTools = tools;
@@ -651,6 +631,11 @@ export default {
         left: 1rem;
         color: #0f4d90;
       }
+      
+      .fa-thumbtack{
+        float: right;
+        color: #0F4D90;
+      }
     }  
   }
 
@@ -658,6 +643,10 @@ export default {
     background-color: #0F4D90;
     color: #ffffff;
     opacity: 1;
+
+    .fa-thumbtack{
+      color: #ffffff;
+    }
 
     h3 {
       color: #ffffff;
