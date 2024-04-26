@@ -115,7 +115,7 @@
             <div
               v-for="tool in paginated('allTools')"
               :key="tool.title"
-              class="medium-12 large-12 cell mbl card-wrap"
+              class="medium-12 large-8 cell mbl card-wrap"
             >
               <a
                 class="card"
