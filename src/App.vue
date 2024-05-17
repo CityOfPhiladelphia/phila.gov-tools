@@ -3,7 +3,6 @@
     id="tools"
     class="phila-ui-skin"
   >
-
     <div class="add-margins-search">    
       <div class="search">
         <input
@@ -103,26 +102,21 @@
 
         <div id="tiles">
           <div class="filter-summary">
-            <span 
-              v-if="search.length > 0"
-              class="result-summary"
-            >
-              Showing {{ filteredTools.length }} results out of {{ tools.length }} in <b><em>Tools</em></b> for <b><em>"{{ search }}"</em></b>
+            <span class="result-summary">
+              Showing {{ filteredTools.length }} results out of {{ tools.length }} in <b><em>Tools</em></b>
+              <span v-if="search.length > 0">
+                for <b><em>"{{ search }}"</em></b>
+              </span>
             </span>
             <span v-if="checkedTopics.length > 0">
-              <span 
-                v-if="search.length == 0"
-                class="result-summary">
-                  Showing {{ filteredTools.length }} results out of {{ tools.length }} in <b><em>Tools</em></b>
-              </span>
               <button
-                v-for="(item, index) in [...checkedTopics,]"
+                v-for="(item, index) in checkedTopics"
                 :key="index"
                 class="filter-button"
                 @click="removeFilter(item)"
               >
                 {{ item }}
-                <i class="far fa-times" />
+                <i class="fa-solid fa-xmark"></i>
               </button>
             </span>
             <span>
@@ -156,7 +150,10 @@
                 :class="{ 'featured-card': tool.isFeatured, 'app-card': !tool.isFeatured }"
               >
                 <div class="content-block">      
-                  <i v-if="tool.isFeatured" class="fa-solid fa-thumbtack" />            
+                  <i 
+                    v-if="tool.isFeatured" 
+                    class="fa-solid fa-thumbtack" 
+                  />            
                   <h3>{{ tool.title }}</h3>
                   <p>{{ tool.short_description }}</p>
                   <div class="content-footer">
@@ -623,12 +620,13 @@ export default {
   }
 
   .filter-summary{
-      margin: 0px 0px 16px 16px;
+      margin: 16px 0px 0px 16px;
     }
 
   .filter-button{
+    font-family: "Open Sans", Helvetica, Roboto, Arial, sans-serif;
     margin: 0px 8px 8px 0px;
-    padding: 4px;
+    padding: 6px;
     border-radius: 4px;
     background-color: #cfcfcf;
     color: #333333;
@@ -638,12 +636,19 @@ export default {
     cursor: pointer;
   }
 
+  .filter-button i{
+    padding-left: 4px;
+  }
+
+  .filter-button:hover{
+    border: 2px solid #2176d2;
+  }
+
   .result-summary {
     margin-right: 8px;
   }
 
   .clear-search-button{
-    margin: 0px 8px 0px 8px;
     border: none;
     background-color: transparent;
     color: #0f4d90;
@@ -672,12 +677,6 @@ export default {
 
     h3 {
       font-size: 24px;
-    }
-
-    .featured-label {
-      font-family: "Montserrat", sans-serif;
-      font-size: 14px;
-      padding-left: 10px;
     }
 
     .view-label {
