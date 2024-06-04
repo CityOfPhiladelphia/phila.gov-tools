@@ -85,14 +85,6 @@
         >
           <i class="fas fa-spinner fa-spin fa-3x" />
         </div>
-
-        <div
-          v-show="!loading && emptyResponse"
-          class="h3 mtm center"
-        >
-          Sorry, there are no results.
-        </div>
-
         <div
           v-show="failure"
           class="h3 mtm center"
@@ -103,9 +95,14 @@
         <div id="tiles">
           <div class="filter-summary">
             <span class="result-summary">
-              Showing {{ filteredTools.length }} results out of {{ tools.length }} in <b><em>Tools</em></b>
+              <span v-if="filteredTools.length === 0">
+                No results found for
+              </span>
+              <span v-else>
+                Showing {{ filteredTools.length }} results out of {{ tools.length }} records <span v-if="checkedTopics.length > 0 || search.length > 0">for</span>
+              </span>
               <span v-if="search.length > 0">
-                for <b><em>"{{ search }}"</em></b>
+                <b><em>"{{ search }}"</em></b>
               </span>
             </span>
             <span v-if="checkedTopics.length > 0">
@@ -116,12 +113,12 @@
                 @click="removeFilter(item)"
               >
                 {{ item }}
-                <i class="fa-solid fa-xmark"></i>
+                <i class="fa-solid fa-xmark" />
               </button>
             </span>
             <span>
               <input
-                v-if="checkedTopics.length > 0"
+                v-if="checkedTopics.length > 0 || search.length > 0"
                 type="submit"
                 class="clear-search-button"
                 value="Clear all"
@@ -625,8 +622,9 @@ export default {
 
   .filter-button{
     font-family: "Open Sans", Helvetica, Roboto, Arial, sans-serif;
-    margin: 0px 8px 8px 0px;
+    margin: 0px 8px 0px 0px;
     padding: 6px;
+    border: 2px solid transparent;
     border-radius: 4px;
     background-color: #cfcfcf;
     color: #333333;
@@ -641,7 +639,7 @@ export default {
   }
 
   .filter-button:hover{
-    border: 2px solid #2176d2;
+    border-color: #2176d2;
   }
 
   .result-summary {
