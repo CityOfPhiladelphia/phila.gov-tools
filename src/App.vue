@@ -94,17 +94,18 @@
 
         <div id="tiles">
           <div class="filter-summary">
-            <span class="result-summary">
-              <span v-if="filteredTools.length === 0">
-                No results found for
-              </span>
-              <span v-else>
-                Showing {{ filteredTools.length }} results out of {{ tools.length }} records <span v-if="checkedTopics.length > 0 || search.length > 0">for</span>
-              </span>
+            <div v-if="emptyResponse">
+              No results found for
               <span v-if="search.length > 0">
                 <b><em>"{{ search }}"</em></b>
               </span>
-            </span>
+            </div> 
+            <div v-else-if="$refs.paginator">
+              Showing {{ start }} – {{ end }} of {{ total }} results
+              <span v-if="search.length > 0">
+                for <b><em>"{{ search }}"</em></b>
+              </span>
+            </div>
             <span v-if="checkedTopics.length > 0">
               <button
                 v-for="(item, index) in checkedTopics"
@@ -179,7 +180,7 @@
                 '.left-arrow': ['left-arrow', 'tabbable'],
                 '.right-arrow': ['right-arrow', 'tabbable'],
               }"
-              @change="onPageChange(); scrollToTop(); "
+              @change="getPaginationRange(); onPageChange(); scrollToTop(); "
             />
           </div>
         </div>
@@ -227,6 +228,9 @@ export default {
       loading: true,
       emptyResponse: false,
       failure: false,
+      start: 0,
+      end: 0,
+      total: 0,
       searchOptions: {
         shouldSort: true,
         threshold: 0.4,
@@ -331,6 +335,8 @@ export default {
     addEventListener('resize', (event) => {
       this.setPerPage();
     });
+    // console.log(this.$refs.paginator);
+    // console.log(this.$refs.paginator.pageItemsCount);
   },
 
   methods: {
@@ -473,6 +479,7 @@ export default {
       await this.filterByTopic();
       await this.filterBySearch();
       await this.checkEmpty();
+      await this.getPaginationRange();
     },
 
     filterByTopic: function() {
@@ -502,6 +509,21 @@ export default {
       }
     },
 
+    getPaginationRange: function () {
+      console.log(this.$refs.paginator);
+      console.log(this.$refs.paginator.pageItemsCount);
+      let rangeRegex = /^(\d+)-(\d+) of (\d+)$/;
+      let matches = rangeRegex.exec(this.$refs.paginator.pageItemsCount);
+      console.log(matches); 
+
+      if (matches != null) {
+        this.start = matches[1];
+        this.end = matches[2];
+        this.total = matches[3];
+      }
+      return;
+    },
+
     toggleTopics: function() {
       this.showTopics = this.showTopics ? false : true;
     },
@@ -522,7 +544,8 @@ export default {
     * @desc scrolls to top from paginate buttons
     */
     scrollToTop : function () {
-      document.getElementById('search-bar-label').scrollIntoView({
+      window.scrollTo({
+        top: 0,
         behavior: 'smooth',
       });
     },
@@ -622,10 +645,10 @@ export default {
 
   .filter-button{
     font-family: "Open Sans", Helvetica, Roboto, Arial, sans-serif;
-    margin: 0px 8px 0px 0px;
+    margin: 12px 16px 8px 0px;
     padding: 6px;
-    border: 2px solid transparent;
     border-radius: 4px;
+    border: 2px solid transparent;
     background-color: #cfcfcf;
     color: #333333;
     line-height: normal;
@@ -642,11 +665,9 @@ export default {
     border-color: #2176d2;
   }
 
-  .result-summary {
-    margin-right: 8px;
-  }
-
   .clear-search-button{
+    margin-top: 12px;
+    padding: 0px;
     border: none;
     background-color: transparent;
     color: #0f4d90;
