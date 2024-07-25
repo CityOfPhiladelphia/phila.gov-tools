@@ -101,7 +101,7 @@
               </span>
             </div> 
             <div v-else-if="$refs.paginator">
-              Showing {{ start }} – {{ end }} of {{ total }} results
+              Showing {{ start }} – {{ end }} of {{ filteredTools.length }} results
               <span v-if="search.length > 0">
                 for <b><em>"{{ search }}"</em></b>
               </span>
@@ -126,6 +126,18 @@
                 @click="clearAllFilters"
               >
             </span>
+            <div v-if="emptyResponse" class="helper-text">
+              There were no results found matching your search. Try adjusting your search settings.
+              <br>
+              <br>
+              Here are some options:
+              <ul>
+                <li>Use different or fewer search terms</li>
+                <li>Check your spelling</li>
+                <li>Remove or adjust any filters</li>
+              </ul>
+              Want to start over? Select Clear all to reset the search settings.
+            </div>
           </div>
           <paginate
             v-if="allTools.length > 0 "
@@ -317,6 +329,7 @@ export default {
   },
 
   async mounted() {
+    this.setPerPage();
     this.getAllTopics();
     await this.getAllTools();
     this.getFeaturedTools();
@@ -331,12 +344,9 @@ export default {
       });
     });
 
-    this.setPerPage();
     addEventListener('resize', (event) => {
       this.setPerPage();
     });
-    // console.log(this.$refs.paginator);
-    // console.log(this.$refs.paginator.pageItemsCount);
   },
 
   methods: {
@@ -519,7 +529,7 @@ export default {
       if (matches != null) {
         this.start = matches[1];
         this.end = matches[2];
-        this.total = matches[3];
+        // this.total = tools.length;
       }
       return;
     },
@@ -674,6 +684,10 @@ export default {
     cursor: pointer;
     font-weight: 700;
     text-decoration: underline;
+  }
+
+  .helper-text {
+    margin-top: 1rem;
   }
 
   .clear-button {
