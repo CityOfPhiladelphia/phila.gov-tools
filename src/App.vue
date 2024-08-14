@@ -650,12 +650,12 @@ export default {
   }
 
   .filter-summary{
-      margin: 16px 0px 0px 16px;
+      margin: 1rem 0px 1rem 1rem;
     }
 
   .filter-button{
     font-family: "Open Sans", Helvetica, Roboto, Arial, sans-serif;
-    margin: 12px 16px 8px 0px;
+    margin: 8px 8px 0 0;
     padding: 6px;
     border-radius: 4px;
     border: 2px solid transparent;
@@ -676,7 +676,7 @@ export default {
   }
 
   .clear-search-button{
-    margin-top: 12px;
+    margin: 12px 0 0 8px;
     padding: 0px;
     border: none;
     background-color: transparent;
