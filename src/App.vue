@@ -753,6 +753,10 @@ export default {
   }
 
   @media (max-width: 749px) {
+    a.card {
+      margin: 0.5rem 0;
+    }
+    
     #main-container {
       flex-direction: column;
     }
