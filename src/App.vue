@@ -94,49 +94,59 @@
 
         <div id="tiles">
           <div class="filter-summary">
-            <div v-if="emptyResponse">
+            <span v-if="emptyResponse">
               No results found for
               <span v-if="search.length > 0">
                 <b><em>"{{ search }}"</em></b>
               </span>
-            </div> 
-            <div v-else-if="$refs.paginator">
+            </span> 
+            <span v-else-if="$refs.paginator">
               Showing {{ start }} – {{ end }} of {{ filteredTools.length }} results
               <span v-if="search.length > 0">
                 for <b><em>"{{ search }}"</em></b>
               </span>
-            </div>
-            <span v-if="checkedTopics.length > 0">
-              <button
-                v-for="(item, index) in checkedTopics"
-                :key="index"
-                class="filter-button"
-                @click="removeFilter(item)"
-              >
-                {{ item }}
-                <i class="fa-solid fa-xmark" />
-              </button>
             </span>
             <span>
               <input
-                v-if="checkedTopics.length > 0 || search.length > 0"
+                v-if="search.length > 0 && checkedTopics.length == 0"
                 type="submit"
                 class="clear-search-button"
                 value="Clear all"
                 @click="clearAllFilters"
               >
             </span>
+            <div>
+              <span v-if="checkedTopics.length > 0">
+                <button
+                  v-for="(item, index) in checkedTopics"
+                  :key="index"
+                  class="filter-button"
+                  @click="removeFilter(item)"
+                >
+                  {{ item }}
+                  <i class="fa-solid fa-xmark" />
+                </button>
+              </span>
+              <span>
+                <input
+                  v-if="checkedTopics.length > 0"
+                  type="submit"
+                  class="clear-search-button"
+                  value="Clear all"
+                  @click="clearAllFilters"
+                >
+              </span>
+            </div>
             <div v-if="emptyResponse" class="helper-text">
-              There were no results found matching your search. Try adjusting your search settings.
+              Improve your search results by:
               <br>
               <br>
-              Here are some options:
               <ul>
                 <li>Use different or fewer search terms</li>
                 <li>Check your spelling</li>
                 <li>Remove or adjust any filters</li>
               </ul>
-              Want to start over? Select Clear all to reset the search settings.
+              Want to start over? Select “Clear all” to reset the search settings.
             </div>
           </div>
           <paginate
@@ -656,7 +666,7 @@ export default {
   .filter-button{
     font-family: "Open Sans", Helvetica, Roboto, Arial, sans-serif;
     margin: 8px 8px 0 0;
-    padding: 6px;
+    padding: 4px;
     border-radius: 4px;
     border: 2px solid transparent;
     background-color: #cfcfcf;
@@ -686,8 +696,10 @@ export default {
     text-decoration: underline;
   }
 
-  .helper-text {
-    margin-top: 1rem;
+  .helper-text{
+    background: rgba(150,201,255,.3);
+    padding: 32px;
+    margin-top: 2rem;
   }
 
   .clear-button {
