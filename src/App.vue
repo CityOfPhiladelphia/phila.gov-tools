@@ -652,7 +652,7 @@ export default {
   padding: 0px;
   margin: 0 auto;
   // max-width: 1270px;
-  max-width: 75rem;
+  max-width: 90rem;
 
   .page-title {
     border-bottom: 12px solid #2176d2;
