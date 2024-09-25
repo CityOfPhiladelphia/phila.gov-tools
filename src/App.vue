@@ -672,7 +672,7 @@ export default {
 
     .featured-label {
       font-family: "Montserrat", sans-serif;
-      font-size: 14px;
+      font-size: 1rem;
       padding-left: 10px;
     }
 
