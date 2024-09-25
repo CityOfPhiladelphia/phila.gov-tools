@@ -765,6 +765,12 @@ export default {
       font-size: 24px;
     }
 
+    .featured-label {
+      font-family: "Montserrat", sans-serif;
+      font-size: 1rem;
+      padding-left: 10px;
+    }
+    
     .view-label {
       padding-right: .5rem;
     }
