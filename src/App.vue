@@ -96,7 +96,10 @@
           <div class="filter-summary">
             <span v-if="emptyResponse">
               No results found for
-              <span v-if="search.length > 0">
+              <span 
+                v-if="search.length > 0"
+                class="search-term"
+                >
                 <b><em>"{{ search }}"</em></b>
               </span>
             </span> 
@@ -137,14 +140,20 @@
                 >
               </span>
             </div>
-            <div v-if="emptyResponse" class="helper-text">
+            <div 
+              v-if="emptyResponse" 
+              class="helper-text"
+            >
+              <strong>There are no matching results.</strong>
+              <br>
+              <br>
               Improve your search results by:
               <br>
               <br>
               <ul>
-                <li>Use different or fewer search terms</li>
-                <li>Check your spelling</li>
-                <li>Remove or adjust any filters</li>
+                <li>Using different or fewer search terms.</li>
+                <li>Checking your spelling.</li>
+                <li>Removing or adjusting any filters.</li>
               </ul>
               Want to start over? Select “Clear all” to reset the search settings.
             </div>
@@ -660,7 +669,7 @@ export default {
   }
 
   .filter-summary{
-      margin: 1rem 0px 1rem 1rem;
+      margin: 1rem;
     }
 
   .filter-button{
@@ -696,10 +705,15 @@ export default {
     text-decoration: underline;
   }
 
+  .search-term {
+    margin-right: 8px;
+  }
+
   .helper-text{
     background: rgba(150,201,255,.3);
     padding: 32px;
     margin-top: 2rem;
+    width: fit-content;
   }
 
   .clear-button {
