@@ -3,41 +3,6 @@
     id="tools"
     class="phila-ui-skin"
   >
-    <div class="add-margins-top">
-      <h2>{{ $t('Featured tools') }}</h2>
-    </div>
-
-    <div class="grid-x">
-      <div
-        v-for="tool in featuredTools"
-        :key="tool.title"
-        class="medium-12 cell mbl card-wrap"
-      >
-        <a
-          class="card featured-card"
-          :href="tool.link"
-        >
-          <div class="content-block">
-            <i class="fa-regular fa-thumbtack" />
-            <span class="featured-label">{{ $t('Featured') }}</span>
-            <h3>{{ tool.title }}</h3>
-            <p>{{ tool.short_description }}</p>
-            <div class="content-footer">
-              <span class="view-label">{{ $t('View') }}</span>
-              <i class="fa-solid fa-angle-right" />
-            </div>
-          </div>
-        </a>
-      </div>
-    </div>
-
-    <div 
-      id="search-bar-label" 
-      class="add-margins-top"
-    >
-      <h2>{{ $t('Browse tools') }}</h2>
-    </div>
-
     <div class="add-margins-search">    
       <div class="vue-search">
         <input
@@ -119,14 +84,6 @@
         >
           <i class="fas fa-spinner fa-spin fa-3x" />
         </div>
-
-        <div
-          v-show="!loading && emptyResponse"
-          class="h3 mtm center"
-        >
-          Sorry, there are no results.
-        </div>
-
         <div
           v-show="failure"
           class="h3 mtm center"
@@ -135,26 +92,96 @@
         </div>
 
         <div id="tiles">
+          <div class="filter-summary">
+            <span v-if="emptyResponse">
+              No results found for
+              <span 
+                v-if="search.length > 0"
+                class="search-term"
+                >
+                <b><em>"{{ search }}"</em></b>
+              </span>
+            </span> 
+            <span v-else-if="$refs.paginator">
+              Showing {{ start }} – {{ end }} of {{ filteredTools.length }} results
+              <span v-if="search.length > 0">
+                for <b><em>"{{ search }}"</em></b>
+              </span>
+            </span>
+            <span>
+              <input
+                v-if="search.length > 0 && checkedTopics.length == 0"
+                type="submit"
+                class="clear-search-button"
+                value="Clear all"
+                @click="clearAllFilters"
+              >
+            </span>
+            <div>
+              <span v-if="checkedTopics.length > 0">
+                <button
+                  v-for="(item, index) in checkedTopics"
+                  :key="index"
+                  class="filter-button"
+                  @click="removeFilter(item)"
+                >
+                  {{ item }}
+                  <i class="fa-solid fa-xmark" />
+                </button>
+              </span>
+              <span>
+                <input
+                  v-if="checkedTopics.length > 0"
+                  type="submit"
+                  class="clear-search-button"
+                  value="Clear all"
+                  @click="clearAllFilters"
+                >
+              </span>
+            </div>
+            <div 
+              v-if="emptyResponse" 
+              class="helper-text"
+            >
+              <strong>There are no matching results.</strong>
+              <br>
+              <br>
+              Improve your search results by:
+              <br>
+              <br>
+              <ul>
+                <li>Using different or fewer search terms.</li>
+                <li>Checking your spelling.</li>
+                <li>Removing or adjusting any filters.</li>
+              </ul>
+              Want to start over? Select “Clear all” to reset the search settings.
+            </div>
+          </div>
           <paginate
-            v-if="filteredTools.length > 0 "
+            v-if="allTools.length > 0 "
             id="tool-results"
             ref="paginator"
-            name="filteredTools"
-            :list="filteredTools"
+            name="allTools"
+            :list="allTools"
             class="grid-x paginate-list"
             tag="div"
             :per="perPage"
           >
             <div
-              v-for="tool in paginated('filteredTools')"
+              v-for="tool in paginated('allTools')"
               :key="tool.title"
               class="medium-12 large-8 cell mbl card-wrap"
             >
               <a
-                class="card app-card"
+                class="card"
                 :href="tool.link"
+                :class="{ 'featured-card': tool.isFeatured, 'app-card': !tool.isFeatured }"
               >
-                <div class="content-block">
+                <div class="content-block">      
+                  <i 
+                    v-if="tool.isFeatured" 
+                    class="fa-solid fa-thumbtack" 
+                  />            
                   <h3>{{ tool.title }}</h3>
                   <p>{{ tool.short_description }}</p>
                   <div class="content-footer">
@@ -167,16 +194,9 @@
           </paginate>
 
           <div class="card-pages">
-            <div
-              v-show="!loading && !emptyResponse && !failure"
-              class="tool-length"
-            >
-              {{ $t('Showing') }} <b> {{ filteredTools.length }} </b> {{ $t('Tools') }}.
-            </div>
-
             <paginate-links
               v-show="!loading && !emptyResponse && !failure"
-              for="filteredTools"
+              for="allTools"
               :async="true"
               :limit="3"
               :show-step-links="true"
@@ -190,7 +210,7 @@
                 '.left-arrow': ['left-arrow', 'tabbable'],
                 '.right-arrow': ['right-arrow', 'tabbable'],
               }"
-              @change="onPageChange(); scrollToTop(); "
+              @change="getPaginationRange(); onPageChange(); scrollToTop(); "
             />
           </div>
         </div>
@@ -229,7 +249,7 @@ export default {
       featuredTools: [],
       search: '',
       routerQuery: {},
-      paginate: [ 'filteredTools' ],
+      paginate: [ 'allTools' ],
       topics: [],
       checkedTopics: [],
       page: 1,
@@ -238,6 +258,9 @@ export default {
       loading: true,
       emptyResponse: false,
       failure: false,
+      start: 0,
+      end: 0,
+      total: 0,
       searchOptions: {
         shouldSort: true,
         threshold: 0.4,
@@ -251,6 +274,17 @@ export default {
     };
   },
   computed: {
+    allTools() {
+      let filteredToolsWithFeaturedFlag = this.filteredTools.map(filteredTool => ({
+        ...filteredTool,
+        isFeatured: false,
+      }));
+      let toolsWithFeaturedFlag = this.featuredTools.map(featuredTool => ({
+        ...featuredTool,
+        isFeatured: true,
+      }));
+      return [ ...toolsWithFeaturedFlag, ...filteredToolsWithFeaturedFlag ];
+    },
     language() {
       let lang = this.isTranslated(window.location.pathname);
       const validLanguages = [ '/es', '/zh', '/ar', '/ht', '/fr', '/sw', '/pt', '/ru', '/vi' ];
@@ -313,6 +347,7 @@ export default {
   },
 
   async mounted() {
+    this.setPerPage();
     this.getAllTopics();
     await this.getAllTools();
     this.getFeaturedTools();
@@ -327,7 +362,6 @@ export default {
       });
     });
 
-    this.setPerPage();
     addEventListener('resize', (event) => {
       this.setPerPage();
     });
@@ -349,25 +383,24 @@ export default {
       for (let tool of this.tools) {
         if (tool.priority_seasonal_value && tool.priority_seasonal_value.includes(currentMonth)) {
           this.featuredTools.push(tool);
+          if (this.featuredTools.length === 3) {
+            return; 
+          }
         }
-      }
-
-      if (this.featuredTools.length > 3) {
-        return;
       }
 
       // new release priority
       for (let tool of this.tools) {
         if (tool.priority_new_release && tool.priority_new_release == 'Yes') {
           this.featuredTools.push(tool);
+          if (this.featuredTools.length === 3) {
+            return; 
+          }
         }
       }
 
-      // fixed priority
-      let fixedLength = 4-this.featuredTools.length;
-
-      for (let i=1; i<=fixedLength; i++) {
-        let iTool = this.tools.filter(tool => tool.priority_fixed_value == i)[0];
+      let iTool = this.tools.filter(tool => tool.priority_fixed_value === 1)[0];
+      if (iTool) {
         this.featuredTools.push(iTool);
       }
 
@@ -461,15 +494,26 @@ export default {
         .catch(e => {})
         .finally(() => {});
     },
+
+    removeFilter(item) {
+      if (this.checkedTopics.includes(item)) {
+        this.checkedTopics = this.checkedTopics.filter(topic => topic !== item);
+      }
+      this.filterResults();
+      this.updateRouterQuery('checkedTopics', this.checkedTopics);
+    },
+    
     filterResults: async function () {
       await this.filterByTopic();
       await this.filterBySearch();
       await this.checkEmpty();
+      await this.getPaginationRange();
     },
 
     filterByTopic: function() {
       if (this.checkedTopics.length !== 0 ){
         this.topicTools = [];
+        this.featuredTools = [];
         this.tools.forEach((tool) => {
           if (this.checkedTopics.includes(tool.category1) || this.checkedTopics.includes(tool.category2)) {
             if (!this.topicTools.includes(tool)) {
@@ -483,6 +527,7 @@ export default {
     },
 
     filterBySearch: function() {
+      this.featuredTools = [];
       if (this.search) {
         this.$search(this.search, this.topicTools, this.searchOptions).then(tools => {
           this.filteredTools = tools;
@@ -490,6 +535,21 @@ export default {
       } else {
         this.filteredTools = this.topicTools;
       }
+    },
+
+    getPaginationRange: function () {
+      console.log(this.$refs.paginator);
+      console.log(this.$refs.paginator.pageItemsCount);
+      let rangeRegex = /^(\d+)-(\d+) of (\d+)$/;
+      let matches = rangeRegex.exec(this.$refs.paginator.pageItemsCount);
+      console.log(matches); 
+
+      if (matches != null) {
+        this.start = matches[1];
+        this.end = matches[2];
+        // this.total = tools.length;
+      }
+      return;
     },
 
     toggleTopics: function() {
@@ -512,7 +572,8 @@ export default {
     * @desc scrolls to top from paginate buttons
     */
     scrollToTop : function () {
-      document.getElementById('search-bar-label').scrollIntoView({
+      window.scrollTo({
+        top: 0,
         behavior: 'smooth',
       });
     },
@@ -606,6 +667,53 @@ export default {
     border-bottom: 12px solid #2176d2;
   }
 
+  .filter-summary{
+      margin: 1rem;
+    }
+
+  .filter-button{
+    font-family: "Open Sans", Helvetica, Roboto, Arial, sans-serif;
+    margin: 8px 8px 0 0;
+    padding: 4px;
+    border-radius: 4px;
+    border: 2px solid transparent;
+    background-color: #cfcfcf;
+    color: #333333;
+    line-height: normal;
+    text-transform: capitalize;
+    font-weight: normal;
+    cursor: pointer;
+  }
+
+  .filter-button i{
+    padding-left: 4px;
+  }
+
+  .filter-button:hover{
+    border-color: #2176d2;
+  }
+
+  .clear-search-button{
+    margin: 12px 0 0 8px;
+    padding: 0px;
+    border: none;
+    background-color: transparent;
+    color: #0f4d90;
+    cursor: pointer;
+    font-weight: 700;
+    text-decoration: underline;
+  }
+
+  .search-term {
+    margin-right: 8px;
+  }
+
+  .helper-text{
+    background: rgba(150,201,255,.3);
+    padding: 32px;
+    margin-top: 2rem;
+    width: fit-content;
+    
   .vue-search {
     position: relative;
     display: flex;
@@ -670,12 +778,6 @@ export default {
       font-size: 24px;
     }
 
-    .featured-label {
-      font-family: "Montserrat", sans-serif;
-      font-size: 14px;
-      padding-left: 10px;
-    }
-
     .view-label {
       padding-right: .5rem;
     }
@@ -692,6 +794,11 @@ export default {
         left: 1rem;
         color: #0f4d90;
       }
+      
+      .fa-thumbtack{
+        float: right;
+        color: #0F4D90;
+      }
     }  
   }
 
@@ -699,6 +806,10 @@ export default {
     background-color: #0F4D90;
     color: #ffffff;
     opacity: 1;
+
+    .fa-thumbtack{
+      color: #ffffff;
+    }
 
     h3 {
       color: #ffffff;
@@ -737,6 +848,7 @@ export default {
     margin-left: 1rem;
     margin-right: 1rem;
     display: flex;
+    float: right;
     justify-content: space-between;
   }
 
