@@ -660,7 +660,6 @@ export default {
 
   padding: 0px;
   margin: 0 auto;
-  // max-width: 1270px;
   max-width: 90rem;
 
   .page-title {
@@ -713,6 +712,7 @@ export default {
     padding: 32px;
     margin-top: 2rem;
     width: fit-content;
+  }
     
   .vue-search {
     position: relative;
