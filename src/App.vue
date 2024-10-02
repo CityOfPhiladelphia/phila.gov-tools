@@ -4,7 +4,7 @@
     class="phila-ui-skin"
   >
     <div class="add-margins-search">    
-      <div class="search">
+      <div class="vue-search">
         <input
           id="search-bar"
           v-model="search"
@@ -13,19 +13,18 @@
           type="text"
           :placeholder="$t('Search by title or keyword')"
         >
-        <input
-          ref="archive-search-bar"
-          type="submit"
-          class="search-submit"
-          value="Search"
-          tabindex="-1"
-        >
         <button
           v-if="search.length > 0"
           class="clear-search-btn"
           @click="clearSearchBar"
         >
           <i class="fas fa-times " />
+        </button>
+        <button
+          class="search-submit"
+          @click="requestData()"
+        >
+          <i class="fa-solid fa-magnifying-glass" />
         </button>
       </div>
     </div>
@@ -662,7 +661,7 @@ export default {
   padding: 0px;
   margin: 0 auto;
   // max-width: 1270px;
-  max-width: 75rem;
+  max-width: 90rem;
 
   .page-title {
     border-bottom: 12px solid #2176d2;
@@ -714,6 +713,47 @@ export default {
     padding: 32px;
     margin-top: 2rem;
     width: fit-content;
+    
+  .vue-search {
+    position: relative;
+    display: flex;
+
+    .search-field{
+      min-height: 3.8rem;
+      border: 2px solid #0f4d90;
+      background: white;
+    }
+
+    .clear-search-btn {
+      position: absolute;
+      top:16px;
+      right: 70px;
+      padding: 0;
+      font-size: 20px;
+      background-color: #fff;
+      opacity: 0.8;
+      cursor: pointer;
+      color: rgba(60, 60, 60, 0.5);
+        &:hover {
+        background: transparent;
+        color: black;
+      }
+    }
+
+    .search-submit{ 
+      padding: 0.4rem;
+      font-size: 2rem;
+      font-weight: 400;
+      background: #0f4d90;
+      color: white;
+      width: 3.8rem;
+      height: 3.8rem;
+      cursor: pointer;
+    }
+
+    .fa-magnifying-glass{
+      font-weight: normal;
+    }
   }
 
   .clear-button {
@@ -902,7 +942,7 @@ export default {
       margin-right: 0px;
     }
 
-    .search {
+    .vue-search {
       width: 95%;
       margin: 0 auto;
     }
