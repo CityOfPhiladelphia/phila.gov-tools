@@ -666,6 +666,48 @@ export default {
     border-bottom: 12px solid #2176d2;
   }
 
+  .vue-search {
+    position: relative;
+    display: flex;
+
+    .search-field{
+      min-height: 3.8rem;
+      border: 2px solid #0f4d90;
+      background: white;
+    }
+
+    .clear-search-btn {
+      position: absolute;
+      top:16px;
+      right: 70px;
+      padding: 0;
+      font-size: 20px;
+      background-color: #fff;
+      opacity: 0.8;
+      cursor: pointer;
+      color: rgba(60, 60, 60, 0.5);
+        &:hover {
+        background: transparent;
+        color: black;
+      }
+    }
+
+    .search-submit{ 
+      padding: 0.4rem;
+      font-size: 2rem;
+      font-weight: 400;
+      background: #0f4d90;
+      color: white;
+      width: 3.8rem;
+      height: 3.8rem;
+      cursor: pointer;
+    }
+
+    .fa-magnifying-glass{
+      font-weight: normal;
+    }
+  }
+
   .filter-summary{
       margin: 1rem;
     }
@@ -778,6 +820,12 @@ export default {
       font-size: 24px;
     }
 
+    .featured-label {
+      font-family: "Montserrat", sans-serif;
+      font-size: 1rem;
+      padding-left: 10px;
+    }
+    
     .view-label {
       padding-right: .5rem;
     }
