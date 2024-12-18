@@ -399,7 +399,25 @@ export default {
         }
       }
 
-      let fixedPriorityTools = this.tools.filter(tool => tool.priority_fixed_value).sort((a, b) => a.priority_fixed_value - b.priority_fixed_value);
+      let fixedPriorityTools = this.tools.filter(tool => tool.priority_fixed_value)//.sort((a, b) => a.priority_fixed_value - b.priority_fixed_value);
+      console.log('fixedPriorityTools:', fixedPriorityTools);
+      // for (let i=0; i<=3; i++) {
+      //   console.log('i:', i)
+      //   if (this.featuredTools.length < 3) {
+      //     console.log('i:', i);
+      //     for (let tool of this.tools) {
+      //       console.log('tool:', tool, 'fixedPriorityTools[i]:', fixedPriorityTools[i]);
+      //       if (tool.title === fixedPriorityTools[i].title) {
+      //         this.featuredTools.push(tool);
+      //       }
+      //     }
+      //   }
+      // }
+      // for (let tool of this.tools) {
+      //   if (this.featuredTools.length < 3) {
+      //     this.featuredTools.push(tool);
+      //   }
+      // }
       for (let tool of fixedPriorityTools) {
         if (this.featuredTools.length < 3) {
           this.featuredTools.push(tool);
@@ -415,6 +433,7 @@ export default {
         }
         return 0;
       });
+      console.log('finished func, this.featuredTools:, ', this.featuredTools);
     },
     async getAllTools() {
       var config = {};
