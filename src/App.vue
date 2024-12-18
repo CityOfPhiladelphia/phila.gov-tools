@@ -660,7 +660,6 @@ export default {
 
   padding: 0px;
   margin: 0 auto;
-  // max-width: 1270px;
   max-width: 90rem;
 
   .page-title {
@@ -755,6 +754,48 @@ export default {
     padding: 32px;
     margin-top: 2rem;
     width: fit-content;
+  }
+    
+  .vue-search {
+    position: relative;
+    display: flex;
+
+    .search-field{
+      min-height: 3.8rem;
+      border: 2px solid #0f4d90;
+      background: white;
+    }
+
+    .clear-search-btn {
+      position: absolute;
+      top:16px;
+      right: 70px;
+      padding: 0;
+      font-size: 20px;
+      background-color: #fff;
+      opacity: 0.8;
+      cursor: pointer;
+      color: rgba(60, 60, 60, 0.5);
+        &:hover {
+        background: transparent;
+        color: black;
+      }
+    }
+
+    .search-submit{ 
+      padding: 0.4rem;
+      font-size: 2rem;
+      font-weight: 400;
+      background: #0f4d90;
+      color: white;
+      width: 3.8rem;
+      height: 3.8rem;
+      cursor: pointer;
+    }
+
+    .fa-magnifying-glass{
+      font-weight: normal;
+    }
   }
 
   .clear-button {
