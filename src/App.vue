@@ -399,11 +399,9 @@ export default {
         }
       }
 
-      let fixedPriorityTools = this.tools.filter(tool => tool.priority_fixed_value).sort((a, b) => a.priority_fixed_value - b.priority_fixed_value);
-      for (let tool of fixedPriorityTools) {
-        if (this.featuredTools.length < 3) {
-          this.featuredTools.push(tool);
-        }
+      let iTool = this.tools.filter(tool => tool.priority_fixed_value === 1)[0];
+      if (iTool) {
+        this.featuredTools.push(iTool);
       }
 
       this.featuredTools.sort(function(a, b) {
