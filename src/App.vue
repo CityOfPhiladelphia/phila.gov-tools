@@ -275,7 +275,13 @@ export default {
   },
   computed: {
     allTools() {
-      let filteredToolsWithFeaturedFlag = this.filteredTools.map(filteredTool => ({
+      let featuredToolsTitles = this.featuredTools.map(tool => tool.title);
+      let filteredTools = this.filteredTools.filter(tool => {
+        if (!featuredToolsTitles.includes(tool.title)) {
+          return true;
+        }
+      });
+      let filteredToolsWithFeaturedFlag = filteredTools.map(filteredTool => ({
         ...filteredTool,
         isFeatured: false,
       }));
@@ -399,9 +405,12 @@ export default {
         }
       }
 
-      let iTool = this.tools.filter(tool => tool.priority_fixed_value === 1)[0];
-      if (iTool) {
-        this.featuredTools.push(iTool);
+      let fixedPriorityTools = this.tools.filter(tool => tool.priority_fixed_value)//.sort((a, b) => a.priority_fixed_value - b.priority_fixed_value);
+      
+      for (let tool of fixedPriorityTools) {
+        if (this.featuredTools.length < 3) {
+          this.featuredTools.push(tool);
+        }
       }
 
       this.featuredTools.sort(function(a, b) {

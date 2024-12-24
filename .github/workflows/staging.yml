@@ -2,7 +2,7 @@ name: Deploy to staging
 on:
   push:
     branches:
-      - staging
+      - fix/pagination-issue
 jobs:
   build:
     name: Build files
