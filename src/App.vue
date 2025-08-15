@@ -229,8 +229,8 @@ import { loadLanguageAsync } from './i18n.js';
 Vue.use(VueFuse);
 Vue.use(VuePaginate);
 
-const defaultToolsEndpoint = 'https://api.airtable.com/v0/appPVX1yJCVtJhklp/tools?count=-1';
-const defaultTopicsEndpoint = 'https://api.airtable.com/v0/appPVX1yJCVtJhklp/topics?count=-1';
+const defaultToolsEndpoint = 'https://phl.carto.com/api/v2/sql?q=select%20*%20from%20phila_gov_tools';
+const defaultTopicsEndpoint = 'https://phl.carto.com/api/v2/sql?q=select%20*%20from%20phila_gov_topics';
 
 import { format } from 'date-fns';
 
@@ -424,25 +424,12 @@ export default {
       });
     },
     async getAllTools() {
-      var config = {};
-      let langSlug = this.isTranslated(window.location.pathname);
-      const validLanguages = [ '/es', '/zh', '/ar', '/ht', '/fr', '/sw', '/pt', '/ru', '/vi' ];
-      if (validLanguages.includes(langSlug)) {
-        config = {};
-      }else {
-        config = {
-          headers: {
-            'Authorization': 'Bearer ' + process.env.VUE_APP_AIRTABLE_ACCESS_TOKEN,
-          },
-        };
-      }
-
       await axios
-        .get( this.toolsEndpoint , config )
+        .get( this.toolsEndpoint )
         .then(response => {
-          for (let record of response.data.records) {
-            this.tools.push(record.fields);
-            this.filteredTools.push(record.fields);
+          for (let record of response.data.rows) {
+            this.tools.push(record);
+            this.filteredTools.push(record);
           }
           this.tools.sort(function(a, b) {
             if (a.title.toLowerCase() < b.title.toLowerCase()) {
@@ -465,30 +452,16 @@ export default {
         })
         .catch(e => {})
         .finally(() => {
-
           this.loading = false;
         });
     },
     getAllTopics: function () {
-      var config = {};
-      let langSlug = this.isTranslated(window.location.pathname);
-      const validLanguages = [ '/es', '/zh', '/ar', '/ht', '/fr', '/sw', '/pt', '/ru', '/vi' ];
-      if (validLanguages.includes(langSlug)) {
-        config = {};
-      }else {
-        config = {
-          headers: {
-            'Authorization': 'Bearer ' + process.env.VUE_APP_AIRTABLE_ACCESS_TOKEN,
-          },
-        };
-      }
-
       axios
-        .get( this.topicsEndpoint , config )
+        .get(this.topicsEndpoint)
         .then(response => {
-          for (let record of response.data.records) {
-            record.fields.key = record.fields.name.trim().toLowerCase();
-            this.topics.push(record.fields);
+          for (let record of response.data.rows) {
+            record.key = record.name.trim().toLowerCase();
+            this.topics.push(record);
           }
           this.topics.sort(function(a, b) {
             if (a.name < b.name) {
